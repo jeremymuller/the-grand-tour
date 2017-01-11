@@ -1,17 +1,24 @@
 function Textures() {
-	this.mode = [60, 62, 64, 65, 67, 69, 71, 72];
-
 	this.octave = 2;
+	this.widths = [0.1, 0.2, 0.3, 0.4, 0.5]; // for pulse
 
 	this.env = new p5.Env();
 	// this.env.setADSR(0.02, 0.1, 0.1, 2);
-	this.env.setADSR(0.1, 0.1, 0.1, 2);
+	this.env.setADSR(10, 0.1, 1, 2);
 	this.env.setRange(1, 0);
 	this.env.setExp(true);
 
 	this.osc = new p5.Oscillator();
 	// osc.setType('triangle');
 	this.osc.setType('square');
+
+	// modulator for FM synthesis
+	/***** might not use this *****/
+	this.modulator = new p5.Oscillator("sine");
+	this.modulator.start();
+	this.modulator.disconnect();
+	this.modulator.freq(0.2);
+	this.modulator.amp(1);
 
 	// this.osc.freq(midiToFreq(random(mode) + octave));
 	// this.osc.amp(this.env);
@@ -22,7 +29,6 @@ function Textures() {
 	this.pulse.freq(440);
 	this.pulse.start();
 
-	this.widths = [0.1, 0.2, 0.3, 0.4, 0.5];
 	this.note = new Tone.Synth({
 	    "oscillator" : {
 	        "type" : "triangle"
@@ -38,9 +44,8 @@ function Textures() {
 	this.play = function(pitch, sus) {
 		// this.osc.freq(midiToFreq(pitch) * this.octave);
 		var detune = 0;
-		if (sus > 0) detune = random([-20, -15, -10, 10, 15, 20]);
+		if (sus > 0) detune = random([-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]);
 		console.log(detune);
-
 
 		this.pulse.freq(midiToFreq(pitch) * this.octave + detune);
 		this.pulse.width(random(this.widths));
