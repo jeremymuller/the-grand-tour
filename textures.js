@@ -1,5 +1,5 @@
 function Textures() {
-	this.octave = 2;
+	this.octave = 1;
 	this.widths = [0.1, 0.2, 0.3, 0.4, 0.5]; // for pulse
 
 	this.env = new p5.Env();
@@ -48,7 +48,7 @@ function Textures() {
 		console.log(detune);
 
 		this.pulse.freq(midiToFreq(pitch) * this.octave + detune);
-		this.pulse.width(random(this.widths));
+		this.pulse.width(0.5);
 
 		this.env.setRange(random(0.1, 1));
 
