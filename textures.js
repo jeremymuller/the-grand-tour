@@ -20,14 +20,14 @@ function Textures() {
 	this.modulator.freq(0.2);
 	this.modulator.amp(1);
 
-	this.osc.freq(midiToFreq(60));
-	this.osc.amp(this.env);
-	this.osc.start();
+	// this.osc.freq(midiToFreq(60));
+	// this.osc.amp(this.env);
+	// this.osc.start();
 
 	this.pulse = new p5.Pulse();
 	this.pulse.amp(this.env);
 	this.pulse.freq(440);
-	// this.pulse.start();
+	this.pulse.start();
 
 	this.note = new Tone.Synth({
 	    "oscillator" : {
@@ -49,8 +49,6 @@ function Textures() {
 
 		this.pulse.freq(midiToFreq(pitch) * this.octave + detune);
 		this.pulse.width(0.5);
-
-		this.osc.freq(midiToFreq(pitch) * this.octave + detune);
 
 		this.env.setRange(random(0.1, 1));
 
