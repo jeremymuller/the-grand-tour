@@ -44,7 +44,7 @@ function Textures() {
 	this.play = function(pitch, sus) {
 		// this.osc.freq(midiToFreq(pitch) * this.octave);
 		var detune = 0;
-		if (sus > 0) detune = random([-1, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1]);
+		if (sus > 0) detune = random([-1, 0, 1]);
 		console.log(detune);
 
 		this.pulse.freq(midiToFreq(pitch) * this.octave + detune);
