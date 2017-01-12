@@ -1,6 +1,7 @@
 function Textures() {
 	this.octave = 1;
-	this.widths = [0.1, 0.2, 0.3, 0.4, 0.5]; // for pulse
+	this.widths = [0.1, 0.2, 0.3, 0.4, 0.5]; // pulse widths
+	this.count = 0; // keeps track of how long things are playing
 
 	this.env = new p5.Env();
 	// this.env.setADSR(0.02, 0.1, 0.1, 2);
@@ -9,8 +10,7 @@ function Textures() {
 	this.env.setExp(true);
 
 	this.osc = new p5.Oscillator();
-	// osc.setType('triangle');
-	this.osc.setType('sine');
+	this.osc.setType('triangle');
 
 	// modulator for FM synthesis
 	/***** might not use this *****/
@@ -42,6 +42,9 @@ function Textures() {
 	}).toMaster();
 
 	this.play = function(pitch, sus) {
+		// TODO: control everything about event timing and
+		// musical stuff here
+
 		// this.osc.freq(midiToFreq(pitch) * this.octave);
 		var detune = random([0, 1]);
 		// if (sus > 0) detune = random([0, 1]);
@@ -53,7 +56,6 @@ function Textures() {
 		this.env.setRange(random(0.1, 1));
 
 		this.env.play(this.pulse, 0, sus);
-
 
 		// note.oscillator.width.value = random(this.widths);
 		// this.note.triggerAttackRelease(midiToFreq(random(mode) + octave), 0.2);

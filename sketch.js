@@ -65,20 +65,28 @@ function draw() {
 	body.style("background-color", c);
 
 	if (play) {
+
+		// TODO: simplify which texture to call
+		
 		// this is where everything happens for the work
 		if ((millis() - count) > delay) {
 
+			textures.octave = 1;
+
 			var pitch = table.getColumn("pitch");
 			var sus = 60;
-			// if (random(100) < 20)
-			// 	sus = 3;
-			// textures.play(random(pitch), sus);
+			if (random(100) < 20)
+				sus = 3;
+			textures.play(random(pitch), sus);
+
 			textures.play(60, sus);
+
 			delay = random(1000, 5000) + sus*1000;
 			count = millis();
 			c = color(0, 0, 100);
 			// body.style("background-color", c);
 		}
+
 		backgroundHue += 0.1;
 	}
 }
