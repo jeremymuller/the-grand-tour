@@ -32,7 +32,8 @@ function setup() {
 	var body = select('body');
 	body.style("background-color", color(backgroundHue, 100, 100));
 
-	textures = new Textures();
+	textures = new Textures(table.getColumn("pitch"));
+	// textures.notes = table.getColumn("pitch");
 
 	delay = random(1000, 5000); // in milliseconds
 
@@ -66,26 +67,28 @@ function draw() {
 
 	if (play) {
 
-		// TODO: simplify which texture to call
-		
+		// TODO: clean up old code
+
+		textures.playTexture1();
 		// this is where everything happens for the work
-		if ((millis() - count) > delay) {
-
-			textures.octave = 1;
-
-			var pitch = table.getColumn("pitch");
-			var sus = 60;
-			if (random(100) < 20)
-				sus = 3;
-			textures.play(random(pitch), sus);
-
-			textures.play(60, sus);
-
-			delay = random(1000, 5000) + sus*1000;
-			count = millis();
-			c = color(0, 0, 100);
-			// body.style("background-color", c);
-		}
+		// if ((millis() - count) > delay) {
+		//
+		// 	textures.octave = 1;
+		//
+		// 	var pitch = table.getColumn("pitch");
+		// 	var sus = 60;
+		// 	if (random(100) < 20)
+		// 		sus = 3;
+		// 	// textures.playTexture1(random(pitch), sus);
+		//
+		// 	textures.playTexture1(60, 0.2);
+		//
+		// 	// delay = random(1000, 5000) + sus*1000;
+		// 	delay = random(200, 500);
+		// 	count = millis();
+		// 	c = color(0, 0, 100);
+		// 	// body.style("background-color", c);
+		// }
 
 		backgroundHue += 0.1;
 	}
