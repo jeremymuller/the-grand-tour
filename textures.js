@@ -1,18 +1,19 @@
 function Textures(notes) {
 
 	/****************** globals ******************/
-	this.count = 0; // keeps track of how long things are playing
+	this.count = millis(); // for controlling delays
 	this.detune = random([0, 1]);
 	this.notes = notes;
 
 	/****************** Texture 1 properties ******************/
+
 	this.octave = 2;
-	this.count = millis();
-	this.delayTexture1 = random(1000, 5000);
+	this.delay = random(1000, 5000);
+	this.texture1part2 = random(1, 1.5) * (this.frameRate*this.frameRate);
+	this.texture1part3 = random(1, 1.5) * (this.frameRate*this.frameRate) + this.texture1part2;
 
 	this.env = new p5.Env();
 	this.env.setADSR(0.02, 0.1, 0.1, 2);
-	// this.env.setADSR(0.02, 0.1, 0.1, 2);
 	// this.env.setADSR(10, 0.1, 1, 2);
 	this.env.setRange(1, 0);
 	this.env.setExp(true);
@@ -56,37 +57,60 @@ function Textures(notes) {
 	/****************** Textures ******************/
 	/**********************************************/
 
+	this.playIntro = function() { // drone on C4
+		if ((millis()-this.count) > this.delay) {
+			this.env.setADSR(0.02, 0.1, 0.1, 1);
+			this.env.setRange(random(0.1, 1));
+			var pitch = 60;
+			this.osc.freq(midiToFreq(pitch) + this.detune);
+			this.env.play(this.osc, 0, 0);
+
+			console.log("INTRO!: " + random(100));
+
+			// this is only for displaying what's going on, instead of having to use the console
+			document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + 0.2 + "\"";
+			this.delay = random(100, 300);
+			this.count = millis();
+		}
+	}
+
 	this.playTexture1 = function() {
 
-		if ((millis()-this.count) > this.delayTexture1) {
+		if ((millis()-this.count) > this.delay) {
+			console.log("Texture1!: " + random(100));
 			// TODO: clean up old code
-
-
 			// musical stuff here
 
 			// this.osc.freq(midiToFreq(pitch) * this.octave);
 			// if (sus > 0) detune = random([0, 1]);
-			console.log(this.detune);
 
 			// this.pulse.freq(midiToFreq(pitch) * this.octave + this.detune);
 			// this.pulse.width(0.5);
 
+			// this.env.setADSR(10, 0.1, 1, 2);
+
 			var pitch = random(this.notes);
-			this.osc.freq(midiToFreq(pitch) * this.octave + this.detune);
+			this.osc.freq(midiToFreq(pitch) * this.octave);
 
 			this.env.setRange(random(0.1, 1));
 
 			var sus = 0;
-			if (random(100) < 20) sus = 3;
+			if (random(100) < 20) {
+				pitch = 60;
+				this.osc.freq(midiToFreq(pitch) + this.detune);
+				sus = 3;
+			}
 
 			this.env.play(this.osc, 0, sus);
 
 			// this is only for displaying what's going on, instead of having to use the console
 			document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + sus + "\"";
 
-			this.delayTexture1 = random(1000, 5000) + sus*1000;
+			this.delay = random(1000, 5000) + sus*1000;
 			this.count = millis();
+
 		}
+
 
 		// note.oscillator.width.value = random(this.widths);
 		// this.note.triggerAttackRelease(midiToFreq(random(mode) + octave), 0.2);

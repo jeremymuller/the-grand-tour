@@ -8,6 +8,11 @@ var play = false;
 var textures;
 var table;
 
+var globalCount = 0;
+var fr = 60; // framerate
+var introDuration; // in seconds
+var texture1Duration; // in seconds
+
 function preload() {
 	table = loadTable("data/Jupiter-satellites.csv", "csv", "header");
 }
@@ -26,7 +31,7 @@ function setup() {
 	startButton = createButton('Tap to start');
 	startButton.class("splash");
 	startButton.parent("container");
-	startButton.mouseReleased(hideButton);
+	startButton.mouseReleased(buttonAction);
 
 	var c = color(backgroundHue, 100, 100);
 	var body = select('body');
@@ -36,6 +41,9 @@ function setup() {
 	// textures.notes = table.getColumn("pitch");
 
 	delay = random(1000, 5000); // in milliseconds
+
+	introDuration = random(60, 90) * fr;
+	texture1Duration = random(60, 90)*fr + introDuration;
 
 	env = new p5.Env();
 	env.setADSR(0.1, 0.2, 0.0, 1);
@@ -68,33 +76,26 @@ function draw() {
 	if (play) {
 
 		// TODO: clean up old code
+		// also, this is where overall form is controlled
+		// i.e., texture 1, texture 2, etc.
 
-		textures.playTexture1();
-		// this is where everything happens for the work
-		// if ((millis() - count) > delay) {
-		//
-		// 	textures.octave = 1;
-		//
-		// 	var pitch = table.getColumn("pitch");
-		// 	var sus = 60;
-		// 	if (random(100) < 20)
-		// 		sus = 3;
-		// 	// textures.playTexture1(random(pitch), sus);
-		//
-		// 	textures.playTexture1(60, 0.2);
-		//
-		// 	// delay = random(1000, 5000) + sus*1000;
-		// 	delay = random(200, 500);
-		// 	count = millis();
-		// 	c = color(0, 0, 100);
-		// 	// body.style("background-color", c);
-		// }
+		/*** make it look like this:
+		*	textures.playIntro();
+		*	textures.playTexture1();
+		*	textures.playTexture2();
+		*	textures.playTexture3();
+		*	textures.playTexture4();
+		***/
+
+		if (introDuration > globalCount) textures.playIntro();
+		else if (texture1Duration > globalCount) textures.playTexture1();
 
 		backgroundHue += 0.1;
+		globalCount++;
 	}
 }
 
-function hideButton() {
+function buttonAction() {
 	// wrapper.style("display:none;");
 	wrapper.remove();
 	play = true;
