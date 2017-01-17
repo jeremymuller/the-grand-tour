@@ -9,8 +9,7 @@ function Textures(notes) {
 
 	this.octave = 2;
 	this.delay = random(1000, 5000);
-	this.texture1part2 = random(1, 1.5) * (this.frameRate*this.frameRate);
-	this.texture1part3 = random(1, 1.5) * (this.frameRate*this.frameRate) + this.texture1part2;
+	this.fadein = 0;
 
 	this.env = new p5.Env();
 	this.env.setADSR(0.02, 0.1, 0.1, 2);
@@ -36,9 +35,8 @@ function Textures(notes) {
 	this.modulator = new p5.Oscillator("sine");
 	this.modulator.start();
 	this.modulator.disconnect();
-	this.modulator.freq(0.2);
+	this.modulator.freq(0.05);
 	this.modulator.amp(1);
-
 
 	// until I figure out how to make Tone.js work on iOS, this is old
 	this.note = new Tone.Synth({
@@ -57,27 +55,32 @@ function Textures(notes) {
 	/****************** Textures ******************/
 	/**********************************************/
 
-	this.playIntro = function() { // drone on C4
+	this.playIntro = function() { // drone/static on C4
 		if ((millis()-this.count) > this.delay) {
-			this.env.setADSR(0.02, 0.1, 0.1, 1);
+			this.env.setADSR(0.04, 0.1, 0.1, 1);
 			this.env.setRange(random(0.1, 1));
+
+			var sec = this.fadein / 60.0;
+			var amp = map(sec, 0, 20, 0, 1);
+			if (amp > 1) amp = 1;
+			this.env.mult(amp);
+
 			var pitch = 60;
 			this.osc.freq(midiToFreq(pitch) + this.detune);
 			this.env.play(this.osc, 0, 0);
-
-			console.log("INTRO!: " + random(100));
 
 			// this is only for displaying what's going on, instead of having to use the console
 			document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + 0.2 + "\"";
 			this.delay = random(100, 300);
 			this.count = millis();
 		}
+
+		this.fadein++;
 	}
 
 	this.playTexture1 = function() {
 
 		if ((millis()-this.count) > this.delay) {
-			console.log("Texture1!: " + random(100));
 			// TODO: clean up old code
 			// musical stuff here
 

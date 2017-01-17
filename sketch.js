@@ -14,7 +14,7 @@ var introDuration; // in seconds
 var texture1Duration; // in seconds
 
 function preload() {
-	table = loadTable("data/Jupiter-satellites.csv", "csv", "header");
+	table = loadTable("data/satellites.csv", "csv", "header");
 }
 
 function setup() {
@@ -37,7 +37,7 @@ function setup() {
 	var body = select('body');
 	body.style("background-color", color(backgroundHue, 100, 100));
 
-	textures = new Textures(table.getColumn("pitch"));
+	textures = new Textures(table.getColumn("Jupiter pitch"));
 	// textures.notes = table.getColumn("pitch");
 
 	delay = random(1000, 5000); // in milliseconds
