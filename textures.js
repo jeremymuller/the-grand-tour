@@ -8,8 +8,10 @@ function Textures(notes) {
 	/****************** Texture 1 properties ******************/
 
 	this.octave = 2;
-	this.delay = random(1000, 5000);
-	this.fadein = 0;
+	this.startC = random([0, 1]);
+	if (this.startC) this.delay = random(1000, 5000); // wait 1 to 5 seconds
+	else this.delay = random(25000, 30000); // wait 25 to 30 seconds
+	this.fadein = 1;
 
 	this.env = new p5.Env();
 	this.env.setADSR(0.02, 0.1, 0.1, 2);
@@ -55,27 +57,52 @@ function Textures(notes) {
 	/****************** Textures ******************/
 	/**********************************************/
 
-	this.playIntro = function() { // drone/static on C4
-		if ((millis()-this.count) > this.delay) {
-			this.env.setADSR(0.04, 0.1, 0.1, 1);
-			this.env.setRange(random(0.1, 1));
+	this.playIntro = function() { // drone-static
 
-			var sec = this.fadein / 60.0;
-			var amp = map(sec, 0, 20, 0, 1);
-			if (amp > 1) amp = 1;
-			this.env.mult(amp);
+		if (this.startC) { // fade in on C4
+			if ((millis()-this.count) > this.delay) {
+				this.env.setADSR(0.04, 0.1, 0.1, 1);
+				this.env.setRange(random(0.1, 1));
 
-			var pitch = 60;
-			this.osc.freq(midiToFreq(pitch) + this.detune);
-			this.env.play(this.osc, 0, 0);
+				// var sec = this.fadein / 60.0;
+				var amp = map(this.fadein, 0, 100, 0, 1);
+				if (amp > 1) amp = 1;
+				this.env.mult(amp);
 
-			// this is only for displaying what's going on, instead of having to use the console
-			document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + 0.2 + "\"";
-			this.delay = random(100, 300);
-			this.count = millis();
+				var pitch = 60;
+				this.osc.freq(midiToFreq(pitch) + this.detune);
+				this.env.play(this.osc, 0, 0);
+
+				// this is only for displaying what's going on, instead of having to use the console
+				document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + 0.2 + "\"";
+				this.delay = random(100, 300);
+				this.count = millis();
+				this.fadein++;
+			}
+		} else { // enter late on a Bb
+			if ((millis()-this.count) > this.delay) {
+				this.env.setADSR(0.04, 0.1, 0.1, 1);
+				this.env.setRange(random(0.1, 1));
+
+				// var sec = this.fadein / 60.0;
+				var amp = map(this.fadein, 0, 100, 0, 1);
+				if (amp > 1) amp = 1;
+				this.env.mult(amp);
+
+				console.log("amp: " + amp);
+				var pitch = 58;
+				this.osc.freq(midiToFreq(pitch) + this.detune);
+				this.env.play(this.osc, 0, 0);
+
+				// this is only for displaying what's going on, instead of having to use the console
+				document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + 0.2 + "\"";
+				this.delay = random(100, 300);
+				this.count = millis();
+				this.fadein += 2;
+			}
 		}
 
-		this.fadein++;
+		console.log("fade in: " + this.fadein);
 	}
 
 	this.playTexture1 = function() {
