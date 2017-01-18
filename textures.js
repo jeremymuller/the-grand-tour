@@ -124,7 +124,7 @@ function Textures(notes) {
 			this.env.setRange(random(0.1, 1));
 
 			var sus = 0;
-			if (random(100) < 10) {
+			if (random(100) < 5) {
 				pitch = 60;
 				this.osc.freq(midiToFreq(pitch) + this.detune);
 				sus = 3;
