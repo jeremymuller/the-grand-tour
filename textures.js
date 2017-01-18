@@ -106,7 +106,6 @@ function Textures(notes) {
 	}
 
 	this.playTexture1 = function() {
-
 		if ((millis()-this.count) > this.delay) {
 			// TODO: clean up old code
 			// musical stuff here
@@ -117,7 +116,7 @@ function Textures(notes) {
 			// this.pulse.freq(midiToFreq(pitch) * this.octave + this.detune);
 			// this.pulse.width(0.5);
 
-			// this.env.setADSR(10, 0.1, 1, 2);
+			this.env.setADSR(0.02, 0.1, 0.1, 2);
 
 			var pitch = random(this.notes);
 			this.osc.freq(midiToFreq(pitch) * this.octave);
@@ -125,7 +124,7 @@ function Textures(notes) {
 			this.env.setRange(random(0.1, 1));
 
 			var sus = 0;
-			if (random(100) < 20) {
+			if (random(100) < 10) {
 				pitch = 60;
 				this.osc.freq(midiToFreq(pitch) + this.detune);
 				sus = 3;
@@ -136,7 +135,7 @@ function Textures(notes) {
 			// this is only for displaying what's going on, instead of having to use the console
 			document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + sus + "\"";
 
-			this.delay = random(1000, 5000) + sus*1000;
+			this.delay = random(1000, 3000) + sus*1000;
 			this.count = millis();
 
 		}
