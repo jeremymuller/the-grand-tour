@@ -98,5 +98,6 @@ function draw() {
 function buttonAction() {
 	// wrapper.style("display:none;");
 	wrapper.remove();
+	textures.count = millis();
 	play = true;
 }
