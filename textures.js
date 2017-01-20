@@ -13,6 +13,8 @@ function Textures(notes) {
 	else this.delay = random(25000, 30000); // wait 25 to 30 seconds
 	this.fadein = 1;
 
+	/****************** Texture 2 properties ******************/
+
 	this.env = new p5.Env();
 	this.env.setADSR(0.02, 0.1, 0.1, 2);
 	// this.env.setADSR(10, 0.1, 1, 2);
@@ -26,11 +28,32 @@ function Textures(notes) {
 	this.osc.amp(this.env);
 	this.osc.start();
 
+	this.oscDelay = new p5.Delay();
+	this.oscDelay.process(this.osc, 0.4, 0.7, 5000);
+
 	// this.pulse = new p5.Pulse();
 	// this.pulse.amp(this.env);
 	// this.pulse.freq(440);
 	// this.pulse.start();
 	this.widths = [0.1, 0.2, 0.3, 0.4, 0.5]; // pulse widths
+
+	/****************** Texture 3 properties ******************/
+
+	this.filter = new p5.BandPass();
+	this.filter.res(30);
+	this.filter.amp(5);
+	this.noise = new p5.Noise();
+	this.noise.disconnect();
+	this.filter.process(this.noise);
+	this.noise.start();
+	this.noise.amp(0);
+
+	this.noiseEnv = new p5.Env();
+	this.noiseEnv.setADSR(0.001, 0.05, 0.2, 0.1);
+	this.noiseEnv.setRange(1, 0);
+
+
+
 
 	// modulator for FM synthesis, might use Amp mod instead for texture 4
 	/***** might not use this *****/
@@ -141,6 +164,7 @@ function Textures(notes) {
 		}
 
 
+
 		// note.oscillator.width.value = random(this.widths);
 		// this.note.triggerAttackRelease(midiToFreq(random(mode) + octave), 0.2);
 
@@ -154,5 +178,29 @@ function Textures(notes) {
 
 		// this.note.triggerAttackRelease("C7", 0.1);
 		// C4 to C7
+	}
+
+	this.playTexture2 = function() {
+		if ((millis()-this.count) > this.delay) {
+			var pitch = random(this.notes);
+			this.osc.freq(midiToFreq(pitch));
+			this.oscDelay.delayTime(random(0.3, 1));
+			this.env.play(this.osc, 0, 0);
+
+			this.delay = 3000;
+			this.count = millis();
+		}
+	}
+
+	this.playTexture3 = function() {
+		if ((millis()-this.count) > this.delay) {
+			var pitch = random(this.notes); // will use this for filter
+			this.filter.freq(midiToFreq(pitch));
+			console.log("NOISE!");
+			this.noiseEnv.play(this.noise);
+
+			this.delay = random(100, 300);
+			this.count = millis();
+		}
 	}
 }
