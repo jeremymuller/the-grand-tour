@@ -40,8 +40,8 @@ function Textures(notes) {
 	/****************** Texture 3 properties ******************/
 
 	this.filter = new p5.BandPass();
-	this.filter.res(30);
-	this.filter.amp(5);
+	this.filter.res(1);
+	this.filter.amp(3);
 	this.noise = new p5.Noise();
 	this.noise.disconnect();
 	this.filter.process(this.noise);
@@ -49,11 +49,9 @@ function Textures(notes) {
 	this.noise.amp(0);
 
 	this.noiseEnv = new p5.Env();
-	this.noiseEnv.setADSR(0.001, 0.05, 0.2, 0.1);
+	this.noiseEnv.setADSR(0.001, 0.03, 0.2, 0.1);
 	this.noiseEnv.setRange(1, 0);
-
-
-
+	this.noiseEnv.setExp(true);
 
 	// modulator for FM synthesis, might use Amp mod instead for texture 4
 	/***** might not use this *****/
@@ -195,7 +193,7 @@ function Textures(notes) {
 	this.playTexture3 = function() {
 		if ((millis()-this.count) > this.delay) {
 			var pitch = random(this.notes); // will use this for filter
-			this.filter.freq(midiToFreq(pitch));
+			this.filter.freq(midiToFreq(pitch) * 2);
 			console.log("NOISE!");
 			this.noiseEnv.play(this.noise);
 
