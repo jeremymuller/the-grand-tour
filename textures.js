@@ -62,17 +62,17 @@ function Textures(notes) {
 	this.modulator.amp(1);
 
 	// until I figure out how to make Tone.js work on iOS, this is old
-	this.note = new Tone.Synth({
-	    "oscillator" : {
-	        "type" : "triangle"
-	    },
-	    "envelope" : {
-	        "attack" : 0.02,
-	        "decay" : 0.1,
-	        "sustain" : 0.1,
-	        "release" : 2,
-	    }
-	}).toMaster();
+	// this.note = new Tone.Synth({
+	//     "oscillator" : {
+	//         "type" : "triangle"
+	//     },
+	//     "envelope" : {
+	//         "attack" : 0.02,
+	//         "decay" : 0.1,
+	//         "sustain" : 0.1,
+	//         "release" : 2,
+	//     }
+	// }).toMaster();
 
 	/**********************************************/
 	/****************** Textures ******************/
@@ -198,6 +198,18 @@ function Textures(notes) {
 			this.noiseEnv.play(this.noise);
 
 			this.delay = random(100, 300);
+			this.count = millis();
+		}
+	}
+
+	this.playTexture4 = function() {
+		if ((millis()-this.count) > this.delay) {
+			var pitch = random(this.notes); // will use this for filter
+			this.filter.freq(midiToFreq(pitch) * 2);
+			console.log("wind? or something");
+			this.noiseEnv.play(this.noise);
+
+			this.delay = random(3000, 5000);
 			this.count = millis();
 		}
 	}

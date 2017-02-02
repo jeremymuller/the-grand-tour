@@ -43,7 +43,7 @@ function setup() {
 	delay = random(1000, 5000); // in milliseconds
 
 	introDuration = random(60, 90) * fr;
-	texture1Duration = random(60, 90)*fr + introDuration;
+	texture1Duration = random(150, 180)*fr + introDuration;
 
 	env = new p5.Env();
 	env.setADSR(0.1, 0.2, 0.0, 1);
