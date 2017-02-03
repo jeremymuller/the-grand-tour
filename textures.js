@@ -54,14 +54,6 @@ function Textures(jupiter) {
 	this.noiseEnv.setExp(true);
 
 	/****************** Texture 4 properties ******************/
-	// Amp modulation for texture 4
-	this.modulator = new p5.Oscillator("sine");
-	this.modulator.start();
-	this.modulator.disconnect();
-	this.modulator.freq(1);
-	this.modulator.amp(1);
-	this.modulator.scale(-1, 1, 0, 1);
-
 	this.windEnv = new p5.Env();
 	this.windEnv.setADSR(1, 0.0, 1, 1);
 	this.windEnv.setRange(1, 0);
@@ -220,7 +212,7 @@ function Textures(jupiter) {
 			this.filter.freq(midiToFreq(pitch) * 2);
 			this.filter.res(50);
 			this.filter.amp(5);
-			console.log("wind? or something");
+
 			var swellDuration = random(5, 20); // in seconds
 			var restDuration = random(3000, 5000); // in milliseconds
 
