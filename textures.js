@@ -1,9 +1,9 @@
-function Textures(notes) {
+function Textures(jupiter) {
 
 	/****************** globals ******************/
 	this.count = millis(); // for controlling delays
 	this.detune = random([0, 1]);
-	this.notes = notes;
+	this.jupiterNotes = jupiter;
 
 	/****************** Texture 1 properties ******************/
 
@@ -53,13 +53,21 @@ function Textures(notes) {
 	this.noiseEnv.setRange(1, 0);
 	this.noiseEnv.setExp(true);
 
-	// modulator for FM synthesis, might use Amp mod instead for texture 4
-	/***** might not use this *****/
+	/****************** Texture 4 properties ******************/
+	// Amp modulation for texture 4
 	this.modulator = new p5.Oscillator("sine");
 	this.modulator.start();
 	this.modulator.disconnect();
-	this.modulator.freq(0.05);
+	this.modulator.freq(1);
 	this.modulator.amp(1);
+	this.modulator.scale(-1, 1, 0, 1);
+
+	this.windEnv = new p5.Env();
+	this.windEnv.setADSR(1, 0.0, 1, 1);
+	this.windEnv.setRange(1, 0);
+	this.windEnv.setExp(false);
+
+	this.reverb = new p5.Reverb();
 
 	// until I figure out how to make Tone.js work on iOS, this is old
 	// this.note = new Tone.Synth({
@@ -75,7 +83,7 @@ function Textures(notes) {
 	// }).toMaster();
 
 	/**********************************************/
-	/****************** Textures ******************/
+	/************** Textures Methods **************/
 	/**********************************************/
 
 	this.playIntro = function() { // drone-static
@@ -139,7 +147,7 @@ function Textures(notes) {
 
 			this.env.setADSR(0.02, 0.1, 0.1, 2);
 
-			var pitch = random(this.notes);
+			var pitch = random(this.jupiterNotes);
 			this.osc.freq(midiToFreq(pitch) * this.octave);
 
 			this.env.setRange(random(0.1, 1));
@@ -180,7 +188,7 @@ function Textures(notes) {
 
 	this.playTexture2 = function() {
 		if ((millis()-this.count) > this.delay) {
-			var pitch = random(this.notes);
+			var pitch = random(this.jupiterNotes);
 			this.osc.freq(midiToFreq(pitch));
 			this.oscDelay.delayTime(random(0.3, 1));
 			this.env.play(this.osc, 0, 0);
@@ -192,7 +200,7 @@ function Textures(notes) {
 
 	this.playTexture3 = function() {
 		if ((millis()-this.count) > this.delay) {
-			var pitch = random(this.notes); // will use this for filter
+			var pitch = random(this.jupiterNotes); // will use this for filter
 			this.filter.freq(midiToFreq(pitch) * 2);
 			console.log("NOISE!");
 			this.noiseEnv.play(this.noise);
@@ -204,12 +212,25 @@ function Textures(notes) {
 
 	this.playTexture4 = function() {
 		if ((millis()-this.count) > this.delay) {
-			var pitch = random(this.notes); // will use this for filter
-			this.filter.freq(midiToFreq(pitch) * 2);
-			console.log("wind? or something");
-			this.noiseEnv.play(this.noise);
 
-			this.delay = random(3000, 5000);
+			if (random([0, 0, 0, 1])) this.windEnv.setExp(true); // 25% of the time true
+			else this.windEnv.setExp(false);
+
+			var pitch = random(this.jupiterNotes); // will use this for filter
+			this.filter.freq(midiToFreq(pitch) * 2);
+			this.filter.res(50);
+			this.filter.amp(5);
+			console.log("wind? or something");
+			var swellDuration = random(5, 20); // in seconds
+			var restDuration = random(3000, 5000); // in milliseconds
+
+			console.log("swell: " + swellDuration);
+			console.log("rest: " + restDuration);
+			this.reverb.process(this.filter, 2, 2);
+			this.windEnv.setADSR(swellDuration/2.0, 0.0, 1, swellDuration/2.0);
+			this.windEnv.play(this.noise);
+
+			this.delay = (swellDuration*1000) + restDuration;
 			this.count = millis();
 		}
 	}
