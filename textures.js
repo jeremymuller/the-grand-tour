@@ -196,19 +196,19 @@ function Textures(jupiter) {
 
 	this.playTexture3 = function() {
 		if ((millis()-this.count) > this.delay) {
-			if (random(100) < 10) {
-				// TODO: this doesn't work for some reason
-
-				var p = shuffle(this.jupiterNotes);
-				this.pattern = subset(p, 0, 4).sort();
-				console.log(this.pattern);
-				this.phrase.sequence = this.pattern;
-				this.part.noLoop();
-				this.part.start();
-
-				this.delay = 2500;
-				this.count = millis();
-			} else {
+			// if (random(100) < 10) {
+			// 	// TODO: this doesn't work for some reason
+			//
+			// 	var p = shuffle(this.jupiterNotes);
+			// 	this.pattern = subset(p, 0, 4).sort();
+			// 	console.log(this.pattern);
+			// 	this.phrase.sequence = this.pattern;
+			// 	this.part.noLoop();
+			// 	this.part.start();
+			//
+			// 	this.delay = 2500;
+			// 	this.count = millis();
+			// } else {
 				var pitch = random(this.jupiterNotes); // will use this for filter
 				this.filter.freq(midiToFreq(pitch) * 2);
 				// console.log("NOISE!");
@@ -216,7 +216,7 @@ function Textures(jupiter) {
 
 				this.delay = random(100, 300);
 				this.count = millis();
-			}
+			// }
 		}
 	}
 
