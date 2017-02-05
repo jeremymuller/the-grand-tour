@@ -89,9 +89,9 @@ function draw() {
 
 		// if (introDuration > globalCount) textures.playIntro();
 		// else if (texture1Duration > globalCount) textures.playTexture1();
-		textures.playTexture2();
+		// textures.playTexture2();
 		// textures.playTexture3();
-		// textures.playTexture4();
+		textures.playTexture4();
 
 		backgroundHue += 0.1;
 		globalCount++;
