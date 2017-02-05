@@ -53,6 +53,12 @@ function Textures(jupiter) {
 	this.noiseEnv.setRange(1, 0);
 	this.noiseEnv.setExp(true);
 
+	this.pattern = [];
+	this.phrase = new p5.Phrase("motive", playMotive, this.pattern);
+	this.part = new p5.Part();
+	this.part.addPhrase(this.phrase);
+	this.part.setBPM(120);
+
 	/****************** Texture 4 properties ******************/
 	this.windEnv = new p5.Env();
 	this.windEnv.setADSR(1, 0.0, 1, 1);
@@ -161,8 +167,6 @@ function Textures(jupiter) {
 
 		}
 
-
-
 		// note.oscillator.width.value = random(this.widths);
 		// this.note.triggerAttackRelease(midiToFreq(random(mode) + octave), 0.2);
 
@@ -185,20 +189,34 @@ function Textures(jupiter) {
 			this.oscDelay.delayTime(random(0.3, 1));
 			this.env.play(this.osc, 0, 0);
 
-			this.delay = 3000;
+			this.delay = random(5000, 10000);
 			this.count = millis();
 		}
 	}
 
 	this.playTexture3 = function() {
 		if ((millis()-this.count) > this.delay) {
-			var pitch = random(this.jupiterNotes); // will use this for filter
-			this.filter.freq(midiToFreq(pitch) * 2);
-			console.log("NOISE!");
-			this.noiseEnv.play(this.noise);
+			if (random(100) < 10) {
+				// TODO: this doesn't work for some reason
 
-			this.delay = random(100, 300);
-			this.count = millis();
+				var p = shuffle(this.jupiterNotes);
+				this.pattern = subset(p, 0, 4).sort();
+				console.log(this.pattern);
+				this.phrase.sequence = this.pattern;
+				this.part.noLoop();
+				this.part.start();
+
+				this.delay = 2500;
+				this.count = millis();
+			} else {
+				var pitch = random(this.jupiterNotes); // will use this for filter
+				this.filter.freq(midiToFreq(pitch) * 2);
+				// console.log("NOISE!");
+				this.noiseEnv.play(this.noise);
+
+				this.delay = random(100, 300);
+				this.count = millis();
+			}
 		}
 	}
 
@@ -225,5 +243,19 @@ function Textures(jupiter) {
 			this.delay = (swellDuration*1000) + restDuration;
 			this.count = millis();
 		}
+	}
+
+	function playMotive(time, pitch) {
+		var envelope = new p5.Env();
+		envelope.setADSR(0.02, 0.0, 1.0, 1);
+		envelope.setRange(1, 0);
+		envelope.setExp(true);
+
+		var square = new p5.Oscillator("square");
+		square.freq(midiToFreq(pitch) * 2);
+		square.amp(this.env);
+		square.start();
+
+		envelope.play(this.osc);
 	}
 }
