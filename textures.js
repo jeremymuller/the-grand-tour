@@ -51,7 +51,7 @@ function Textures(jupiter) {
 	this.noiseEnv.setADSR(0.001, 0.03, 0.2, 0.1);
 	this.noiseEnv.setRange(1, 0);
 	this.noiseEnv.setExp(true);
-	this.noiseEnv.mult(2);
+	this.noiseEnv.mult(0.5);
 
 	this.pattern = [];
 	var self = this; // this is created because callback functions don't use 'this' context
@@ -235,6 +235,27 @@ function Textures(jupiter) {
 			this.filter.amp(4);
 
 			var swellDuration = random(5, 20); // in seconds
+			var restDuration = random(3000, 5000); // in milliseconds
+
+			console.log("swell: " + swellDuration);
+			console.log("rest: " + restDuration);
+			this.reverb.process(this.filter, 2, 2);
+			this.windEnv.setADSR(swellDuration/2.0, 0.0, 1, swellDuration/2.0);
+			this.windEnv.play(this.noise);
+
+			this.delay = (swellDuration*1000) + restDuration;
+			this.count = millis();
+		}
+	}
+
+	this.playCoda = function() {
+		if ((millis()-this.count) > this.delay) {
+			this.windEnv.setExp(false);
+			this.filter.freq(midiToFreq(60));
+			this.filter.res(50);
+			this.filter.amp(8);
+
+			var swellDuration = 60; // in seconds
 			var restDuration = random(3000, 5000); // in milliseconds
 
 			console.log("swell: " + swellDuration);
