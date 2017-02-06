@@ -11,6 +11,7 @@ var table;
 var globalCount = 0;
 var fr = 60; // framerate
 var introDuration, texture1Duration, texture2Duration, texture3Duration, texture4Duration; // in seconds
+var coda; // TODO
 
 function preload() {
 	table = loadTable("data/satellites.csv", "csv", "header");
@@ -41,9 +42,13 @@ function setup() {
 
 	delay = random(1000, 5000); // in milliseconds
 
-	introDuration = random(60, 90) * fr;
-	texture1Duration = random(150, 180)*fr + introDuration;
+	// introDuration = random(60, 90) * fr;
+	// texture1Duration = random(150, 180)*fr + introDuration;
+	introDuration = 60 * fr;
+	texture1Duration = 60 * fr + introDuration;
 	texture2Duration = 60 * fr + texture1Duration;
+	texture3Duration = 60 * fr + texture2Duration;
+	texture4Duration = 60 * fr + texture3Duration;
 
 	env = new p5.Env();
 	// env.setADSR(0.1, 0.2, 0.0, 1);
@@ -88,11 +93,11 @@ function draw() {
 		*	textures.playTexture4();
 		***/
 
-		// if (introDuration > globalCount) textures.playIntro();
-		// else if (texture1Duration > globalCount) textures.playTexture1();
-		// textures.playTexture2();
-		// textures.playTexture3();
-		textures.playTexture4();
+		if (introDuration > globalCount) textures.playIntro();
+		else if (texture1Duration > globalCount) textures.playTexture1();
+		else if (texture2Duration > globalCount) textures.playTexture2();
+		else if (texture3Duration > globalCount) textures.playTexture3();
+		else if (texture4Duration > globalCount) textures.playTexture4();
 
 		backgroundHue += 0.1;
 		globalCount++;
