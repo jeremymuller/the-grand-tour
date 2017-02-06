@@ -29,7 +29,6 @@ function Textures(jupiter) {
 	this.osc.start();
 
 	this.oscDelay = new p5.Delay();
-	this.oscDelay.process(this.osc, 0.4, 0.7, 5000);
 
 	// this.pulse = new p5.Pulse();
 	// this.pulse.amp(this.env);
@@ -52,12 +51,17 @@ function Textures(jupiter) {
 	this.noiseEnv.setADSR(0.001, 0.03, 0.2, 0.1);
 	this.noiseEnv.setRange(1, 0);
 	this.noiseEnv.setExp(true);
+	this.noiseEnv.mult(2);
 
 	this.pattern = [];
-	this.phrase = new p5.Phrase("motive", playMotive, this.pattern);
+	var self = this; // this is created because callback functions don't use 'this' context
+	var p = shuffle(this.jupiterNotes);
+	var pattern = subset(p, 0, 5).sort();
+	console.log(pattern);
+	this.phrase = new p5.Phrase("motive", playMotive, pattern);
 	this.part = new p5.Part();
 	this.part.addPhrase(this.phrase);
-	this.part.setBPM(120);
+	this.part.setBPM(90);
 
 	/****************** Texture 4 properties ******************/
 	this.windEnv = new p5.Env();
@@ -185,6 +189,7 @@ function Textures(jupiter) {
 	this.playTexture2 = function() {
 		if ((millis()-this.count) > this.delay) {
 			var pitch = random(this.jupiterNotes);
+			this.oscDelay.process(this.osc, 0.4, 0.7, 5000);
 			this.osc.freq(midiToFreq(pitch));
 			this.oscDelay.delayTime(random(0.3, 1));
 			this.env.play(this.osc, 0, 0);
@@ -195,20 +200,18 @@ function Textures(jupiter) {
 	}
 
 	this.playTexture3 = function() {
+		// this.oscDelay.disconnect();
 		if ((millis()-this.count) > this.delay) {
-			// if (random(100) < 10) {
-			// 	// TODO: this doesn't work for some reason
-			//
-			// 	var p = shuffle(this.jupiterNotes);
-			// 	this.pattern = subset(p, 0, 4).sort();
-			// 	console.log(this.pattern);
-			// 	this.phrase.sequence = this.pattern;
-			// 	this.part.noLoop();
-			// 	this.part.start();
-			//
-			// 	this.delay = 2500;
-			// 	this.count = millis();
-			// } else {
+			if (random(100) < 2) {
+				this.oscDelay.process(this.osc, 0.9, 0.3, 3000);
+				var p = shuffle(this.jupiterNotes);
+				this.pattern = subset(p, 0, 5).sort();
+				// this.phrase.sequence = this.pattern;
+				this.part.start();
+
+				this.delay = 1000;
+				this.count = millis();
+			} else {
 				var pitch = random(this.jupiterNotes); // will use this for filter
 				this.filter.freq(midiToFreq(pitch) * 2);
 				// console.log("NOISE!");
@@ -216,7 +219,7 @@ function Textures(jupiter) {
 
 				this.delay = random(100, 300);
 				this.count = millis();
-			// }
+			}
 		}
 	}
 
@@ -229,7 +232,7 @@ function Textures(jupiter) {
 			var pitch = random(this.jupiterNotes); // will use this for filter
 			this.filter.freq(midiToFreq(pitch) * 2);
 			this.filter.res(50);
-			this.filter.amp(5);
+			this.filter.amp(4);
 
 			var swellDuration = random(5, 20); // in seconds
 			var restDuration = random(3000, 5000); // in milliseconds
@@ -246,16 +249,8 @@ function Textures(jupiter) {
 	}
 
 	function playMotive(time, pitch) {
-		var envelope = new p5.Env();
-		envelope.setADSR(0.02, 0.0, 1.0, 1);
-		envelope.setRange(1, 0);
-		envelope.setExp(true);
-
-		var square = new p5.Oscillator("square");
-		square.freq(midiToFreq(pitch) * 2);
-		square.amp(this.env);
-		square.start();
-
-		envelope.play(this.osc);
+		self.env.setADSR(0.02, 0.0, 1.0, 2);
+		self.osc.freq(midiToFreq(pitch) * 2);
+		self.env.play();
 	}
 }
