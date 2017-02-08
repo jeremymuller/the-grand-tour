@@ -106,13 +106,15 @@ function draw() {
 
 	if (play) {
 		// this is where overall form is controlled
-		if ((introDuration + globalCount) > millis()) textures.playIntro();
-		else if ((texture1Duration + globalCount) > millis()) textures.playTexture1();
-		else if ((texture2Duration + globalCount) > millis()) textures.playTexture2();
-		else if ((texture3Duration + globalCount) > millis()) textures.playTexture3();
-		else if ((texture4Duration + globalCount) > millis()) textures.playTexture4();
-		else if ((codaDuration + globalCount) > millis()) textures.playCoda();
-		else theEnd();
+		// if ((introDuration + globalCount) > millis()) textures.playIntro();
+		// else if ((texture1Duration + globalCount) > millis()) textures.playTexture1();
+		// else if ((texture2Duration + globalCount) > millis()) textures.playTexture2();
+		// else if ((texture3Duration + globalCount) > millis()) textures.playTexture3();
+		// else if ((texture4Duration + globalCount) > millis()) textures.playTexture4();
+		// else if ((codaDuration + globalCount) > millis()) textures.playCoda();
+		// else theEnd();
+
+		theEnd();
 
 		// else if (texture4Duration > globalCount) textures.playTexture4();
 
@@ -131,5 +133,12 @@ function buttonAction() {
 
 function theEnd() {
 	play = false;
+	wrapper = createDiv('');
+	wrapper.class("wrapper");
+	wrapper.id("container");
+
+	var finale = createDiv("The End");
+	finale.class("splash");
+	finale.parent("container");
 	console.log("the end");
 }
