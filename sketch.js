@@ -42,14 +42,38 @@ function setup() {
 
 	delay = random(1000, 5000); // in milliseconds
 
+	// introDuration = 60 * fr;
+	// texture1Duration = 60 * fr + introDuration;
+
+	// durations for each movement & section
 	// introDuration = random(60, 90) * fr;
 	// texture1Duration = random(150, 180)*fr + introDuration;
-	introDuration = 60 * fr;
-	texture1Duration = 60 * fr + introDuration;
-	texture2Duration = 60 * fr + texture1Duration;
-	texture3Duration = 60 * fr + texture2Duration;
-	texture4Duration = 60 * fr + texture3Duration;
-	codaDuration = 65 * fr + texture4Duration;
+	// texture2Duration = random(145, 155) * fr + texture1Duration;
+	// texture3Duration = random(115, 125) * fr + texture2Duration;
+	// texture4Duration = random(175, 185) * fr + texture3Duration;
+	// codaDuration = 60 * fr + texture4Duration;
+
+	introDuration = random(1, 1.5)*60000;
+	texture1Duration = random(2.5, 3)*60000 + introDuration;
+	texture2Duration = random(2.45, 2.55)*60000 + texture1Duration;
+	texture3Duration = random(1.95, 2.05)*60000 + texture2Duration;
+	texture4Duration = random(2.95, 3.05)*60000 + texture3Duration;
+	codaDuration = 1*60000 + texture4Duration;
+
+	/******* for testing *******/
+	// introDuration = 1*60000;
+	// texture1Duration = 1*60000 + introDuration;
+	// texture2Duration = 1*60000 + texture1Duration;
+	// texture3Duration = 1*60000 + texture2Duration;
+	// texture4Duration = 1*60000 + texture3Duration;
+	// codaDuration = 1*60000 + texture4Duration;
+
+	console.log("intro: " + introDuration);
+	console.log("1: " + texture1Duration);
+	console.log("2: " + texture2Duration);
+	console.log("3: " + texture3Duration);
+	console.log("4: " + texture4Duration);
+	console.log("coda: " + codaDuration);
 
 	env = new p5.Env();
 	// env.setADSR(0.1, 0.2, 0.0, 1);
@@ -81,25 +105,16 @@ function draw() {
 	body.style("background-color", c);
 
 	if (play) {
+		// this is where overall form is controlled
+		if ((introDuration + globalCount) > millis()) textures.playIntro();
+		else if ((texture1Duration + globalCount) > millis()) textures.playTexture1();
+		else if ((texture2Duration + globalCount) > millis()) textures.playTexture2();
+		else if ((texture3Duration + globalCount) > millis()) textures.playTexture3();
+		else if ((texture4Duration + globalCount) > millis()) textures.playTexture4();
+		else if ((codaDuration + globalCount) > millis()) textures.playCoda();
+		else theEnd();
 
-		// TODO: clean up old code
-		// also, this is where overall form is controlled
-		// i.e., texture 1, texture 2, etc.
-
-		/*** make it look like this:
-		*	textures.playIntro();
-		*	textures.playTexture1();
-		*	textures.playTexture2();
-		*	textures.playTexture3();
-		*	textures.playTexture4();
-		***/
-
-		if (introDuration > globalCount) textures.playIntro();
-		else if (texture1Duration > globalCount) textures.playTexture1();
-		else if (texture2Duration > globalCount) textures.playTexture2();
-		else if (texture3Duration > globalCount) textures.playTexture3();
-		else if (texture4Duration > globalCount) textures.playTexture4();
-		else if (codaDuration > globalCount) textures.playCoda();
+		// else if (texture4Duration > globalCount) textures.playTexture4();
 
 		backgroundHue += 0.1;
 		globalCount++;
@@ -110,5 +125,11 @@ function buttonAction() {
 	// wrapper.style("display:none;");
 	wrapper.remove();
 	textures.count = millis();
+	globalCount = millis();
 	play = true;
+}
+
+function theEnd() {
+	play = false;
+	console.log("the end");
 }

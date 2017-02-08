@@ -51,7 +51,7 @@ function Textures(jupiter) {
 	this.noiseEnv.setADSR(0.001, 0.03, 0.2, 0.1);
 	this.noiseEnv.setRange(1, 0);
 	this.noiseEnv.setExp(true);
-	this.noiseEnv.mult(0.5);
+	this.noiseEnv.mult(0.7);
 
 	this.pattern = [];
 	var self = this; // this is created because callback functions don't use 'this' context
@@ -92,7 +92,7 @@ function Textures(jupiter) {
 
 		if (this.startC) { // fade in on C4
 			if ((millis()-this.count) > this.delay) {
-				this.env.setADSR(0.04, 0.1, 0.1, 1);
+				this.env.setADSR(0.05, 0.1, 0.1, 1);
 				this.env.setRange(random(0.1, 1));
 
 				// var sec = this.fadein / 60.0;
@@ -112,7 +112,7 @@ function Textures(jupiter) {
 			}
 		} else { // enter late on a Bb
 			if ((millis()-this.count) > this.delay) {
-				this.env.setADSR(0.04, 0.1, 0.1, 1);
+				this.env.setADSR(0.05, 0.1, 0.1, 1);
 				this.env.setRange(random(0.1, 1));
 
 				// var sec = this.fadein / 60.0;
@@ -147,7 +147,8 @@ function Textures(jupiter) {
 			// this.pulse.freq(midiToFreq(pitch) * this.octave + this.detune);
 			// this.pulse.width(0.5);
 
-			this.env.setADSR(0.02, 0.1, 0.1, 2);
+			// this.env.setADSR(0.02, 0.1, 0.1, 2);
+			this.env.setADSR(0.02, 0.1, 0.5, 2);
 
 			var pitch = random(this.jupiterNotes);
 			this.osc.freq(midiToFreq(pitch) * this.octave);
@@ -226,8 +227,8 @@ function Textures(jupiter) {
 	this.playTexture4 = function() {
 		if ((millis()-this.count) > this.delay) {
 
-			if (random([0, 0, 0, 1])) this.windEnv.setExp(true); // 25% of the time true
-			else this.windEnv.setExp(false);
+			// if (random([0, 0, 0, 1])) this.windEnv.setExp(true); // 25% of the time true
+			// else this.windEnv.setExp(false);
 
 			var pitch = random(this.jupiterNotes); // will use this for filter
 			this.filter.freq(midiToFreq(pitch) * 2);
@@ -257,9 +258,7 @@ function Textures(jupiter) {
 
 			var swellDuration = 60; // in seconds
 			var restDuration = random(3000, 5000); // in milliseconds
-
-			console.log("swell: " + swellDuration);
-			console.log("rest: " + restDuration);
+			console.log("CODA!");
 			this.reverb.process(this.filter, 2, 2);
 			this.windEnv.setADSR(swellDuration/2.0, 0.0, 1, swellDuration/2.0);
 			this.windEnv.play(this.noise);
