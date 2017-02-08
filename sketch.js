@@ -106,15 +106,13 @@ function draw() {
 
 	if (play) {
 		// this is where overall form is controlled
-		// if ((introDuration + globalCount) > millis()) textures.playIntro();
-		// else if ((texture1Duration + globalCount) > millis()) textures.playTexture1();
-		// else if ((texture2Duration + globalCount) > millis()) textures.playTexture2();
-		// else if ((texture3Duration + globalCount) > millis()) textures.playTexture3();
-		// else if ((texture4Duration + globalCount) > millis()) textures.playTexture4();
-		// else if ((codaDuration + globalCount) > millis()) textures.playCoda();
-		// else theEnd();
-
-		textures.playTexture2();
+		if ((introDuration + globalCount) > millis()) textures.playIntro();
+		else if ((texture1Duration + globalCount) > millis()) textures.playTexture1();
+		else if ((texture2Duration + globalCount) > millis()) textures.playTexture2();
+		else if ((texture3Duration + globalCount) > millis()) textures.playTexture3();
+		else if ((texture4Duration + globalCount) > millis()) textures.playTexture4();
+		else if ((codaDuration + globalCount) > millis()) textures.playCoda();
+		else theEnd();
 
 		// else if (texture4Duration > globalCount) textures.playTexture4();
 
