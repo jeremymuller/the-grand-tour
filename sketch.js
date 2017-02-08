@@ -114,7 +114,7 @@ function draw() {
 		// else if ((codaDuration + globalCount) > millis()) textures.playCoda();
 		// else theEnd();
 
-		theEnd();
+		textures.playTexture2();
 
 		// else if (texture4Duration > globalCount) textures.playTexture4();
 

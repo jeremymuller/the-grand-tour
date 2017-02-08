@@ -15,6 +15,9 @@ function Textures(jupiter) {
 
 	/****************** Texture 2 properties ******************/
 
+	// consistent with the ratios happening in piano part
+	this.ratios = [2/9.0, 0.25, 0.4, 2/6.0, 0.125, 0.5, 2/15.0, 2/3.0, 2];
+
 	this.env = new p5.Env();
 	this.env.setADSR(0.02, 0.1, 0.1, 2);
 	// this.env.setADSR(10, 0.1, 1, 2);
@@ -192,7 +195,7 @@ function Textures(jupiter) {
 			var pitch = random(this.jupiterNotes);
 			this.oscDelay.process(this.osc, 0.4, 0.7, 5000);
 			this.osc.freq(midiToFreq(pitch));
-			this.oscDelay.delayTime(random(0.3, 1));
+			this.oscDelay.delayTime(random(this.ratios));
 			this.env.play(this.osc, 0, 0);
 
 			this.delay = random(5000, 10000);
