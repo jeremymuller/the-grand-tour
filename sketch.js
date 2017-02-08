@@ -37,7 +37,9 @@ function setup() {
 	var body = select('body');
 	body.style("background-color", color(backgroundHue, 100, 100));
 
-	textures = new Textures(table.getColumn("Jupiter pitch"));
+	var jupiter = table.getColumn("Jupiter pitch");
+	var saturn = subset(table.getColumn("Saturn pitch"), 0, 62);
+	textures = new Textures(jupiter, saturn);
 	// textures.notes = table.getColumn("pitch");
 
 	delay = random(1000, 5000); // in milliseconds
@@ -106,14 +108,16 @@ function draw() {
 
 	if (play) {
 		// this is where overall form is controlled
-		if ((introDuration + globalCount) > millis()) textures.playIntro();
-		else if ((texture1Duration + globalCount) > millis()) textures.playTexture1();
-		else if ((texture2Duration + globalCount) > millis()) textures.playTexture2();
-		else if ((texture3Duration + globalCount) > millis()) textures.playTexture3();
-		else if ((texture4Duration + globalCount) > millis()) textures.playTexture4();
-		else if ((codaDuration + globalCount) > millis()) textures.playCoda();
-		else theEnd();
+		// if ((introDuration + globalCount) > millis()) textures.playIntro();
+		// else if ((texture1Duration + globalCount) > millis()) textures.playTexture1();
+		// else if ((texture2Duration + globalCount) > millis()) textures.playTexture2();
+		// else if ((texture3Duration + globalCount) > millis()) textures.playTexture3();
+		// else if ((texture4Duration + globalCount) > millis()) textures.playTexture4();
+		// else if ((codaDuration + globalCount) > millis()) textures.playCoda();
+		// else theEnd();
 
+
+		textures.playTexture2();
 		// else if (texture4Duration > globalCount) textures.playTexture4();
 
 		backgroundHue += 0.1;

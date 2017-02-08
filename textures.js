@@ -1,9 +1,10 @@
-function Textures(jupiter) {
+function Textures(jupiter, saturn) {
 
 	/****************** globals ******************/
 	this.count = millis(); // for controlling delays
 	this.detune = random([0, 1]);
 	this.jupiterNotes = jupiter;
+	this.saturnNotes = saturn;
 
 	/****************** Texture 1 properties ******************/
 
@@ -108,7 +109,7 @@ function Textures(jupiter) {
 				this.env.play(this.osc, 0, 0);
 
 				// this is only for displaying what's going on, instead of having to use the console
-				document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + 0.2 + "\"";
+				// document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + 0.2 + "\"";
 				this.delay = random(100, 300);
 				this.count = millis();
 				this.fadein++;
@@ -129,7 +130,7 @@ function Textures(jupiter) {
 				this.env.play(this.osc, 0, 0);
 
 				// this is only for displaying what's going on, instead of having to use the console
-				document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + 0.2 + "\"";
+				// document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + 0.2 + "\"";
 				this.delay = random(100, 300);
 				this.count = millis();
 				this.fadein += 2;
@@ -168,7 +169,7 @@ function Textures(jupiter) {
 			this.env.play(this.osc, 0, sus);
 
 			// this is only for displaying what's going on, instead of having to use the console
-			document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + sus + "\"";
+			// document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + sus + "\"";
 
 			this.delay = random(1000, 3000) + sus*1000;
 			this.count = millis();
@@ -192,9 +193,10 @@ function Textures(jupiter) {
 
 	this.playTexture2 = function() {
 		if ((millis()-this.count) > this.delay) {
-			var pitch = random(this.jupiterNotes);
+			var pitch = random(this.saturnNotes);
+			console.log("pitch: " + pitch);
 			this.oscDelay.process(this.osc, 0.4, 0.7, 5000);
-			this.osc.freq(midiToFreq(pitch));
+			this.osc.freq(midiToFreq(pitch) * this.octave);
 			this.oscDelay.delayTime(random(this.ratios));
 			this.env.play(this.osc, 0, 0);
 
