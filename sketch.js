@@ -39,8 +39,9 @@ function setup() {
 
 	var jupiter = table.getColumn("Jupiter pitch");
 	var saturn = subset(table.getColumn("Saturn pitch"), 0, 62);
-	textures = new Textures(jupiter, saturn);
-	// textures.notes = table.getColumn("pitch");
+	var uranus = subset(table.getColumn("Uranus pitch"), 0, 27);
+	var neptune = subset(table.getColumn("Neptune pitch"), 0, 14);
+	textures = new Textures(jupiter, saturn, uranus, neptune);
 
 	delay = random(1000, 5000); // in milliseconds
 
@@ -117,7 +118,7 @@ function draw() {
 		// else theEnd();
 
 
-		textures.playTexture2();
+		textures.playTexture4();
 		// else if (texture4Duration > globalCount) textures.playTexture4();
 
 		backgroundHue += 0.1;

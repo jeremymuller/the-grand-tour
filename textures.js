@@ -1,10 +1,12 @@
-function Textures(jupiter, saturn) {
+function Textures(jupiter, saturn, uranus, neptune) {
 
 	/****************** globals ******************/
 	this.count = millis(); // for controlling delays
 	this.detune = random([0, 1]);
 	this.jupiterNotes = jupiter;
 	this.saturnNotes = saturn;
+	this.uranusNotes = uranus;
+	this.neptuneNotes = neptune;
 
 	/****************** Texture 1 properties ******************/
 
@@ -59,7 +61,7 @@ function Textures(jupiter, saturn) {
 
 	this.pattern = [];
 	var self = this; // this is created because callback functions don't use 'this' context
-	var p = shuffle(this.jupiterNotes);
+	var p = shuffle(this.uranusNotes);
 	var pattern = subset(p, 0, 5).sort();
 	console.log(pattern);
 	this.phrase = new p5.Phrase("motive", playMotive, pattern);
@@ -194,7 +196,6 @@ function Textures(jupiter, saturn) {
 	this.playTexture2 = function() {
 		if ((millis()-this.count) > this.delay) {
 			var pitch = random(this.saturnNotes);
-			console.log("pitch: " + pitch);
 			this.oscDelay.process(this.osc, 0.4, 0.7, 5000);
 			this.osc.freq(midiToFreq(pitch) * this.octave);
 			this.oscDelay.delayTime(random(this.ratios));
@@ -210,15 +211,19 @@ function Textures(jupiter, saturn) {
 		if ((millis()-this.count) > this.delay) {
 			if (random(100) < 2) {
 				this.oscDelay.process(this.osc, 0.9, 0.3, 3000);
+
+				/***** old *****/
 				var p = shuffle(this.jupiterNotes);
 				this.pattern = subset(p, 0, 5).sort();
 				// this.phrase.sequence = this.pattern;
+				/***************/
+
 				this.part.start();
 
 				this.delay = 1000;
 				this.count = millis();
 			} else {
-				var pitch = random(this.jupiterNotes); // will use this for filter
+				var pitch = random(this.uranusNotes); // will use this for filter
 				this.filter.freq(midiToFreq(pitch) * 2);
 				// console.log("NOISE!");
 				this.noiseEnv.play(this.noise);
@@ -235,7 +240,7 @@ function Textures(jupiter, saturn) {
 			// if (random([0, 0, 0, 1])) this.windEnv.setExp(true); // 25% of the time true
 			// else this.windEnv.setExp(false);
 
-			var pitch = random(this.jupiterNotes); // will use this for filter
+			var pitch = random(this.neptuneNotes); // will use this for filter
 			this.filter.freq(midiToFreq(pitch) * 2);
 			this.filter.res(50);
 			this.filter.amp(4);
@@ -243,8 +248,6 @@ function Textures(jupiter, saturn) {
 			var swellDuration = random(5, 20); // in seconds
 			var restDuration = random(3000, 5000); // in milliseconds
 
-			console.log("swell: " + swellDuration);
-			console.log("rest: " + restDuration);
 			this.reverb.process(this.filter, 2, 2);
 			this.windEnv.setADSR(swellDuration/2.0, 0.0, 1, swellDuration/2.0);
 			this.windEnv.play(this.noise);
