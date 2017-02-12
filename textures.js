@@ -209,7 +209,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 	this.playTexture3 = function() {
 		// this.oscDelay.disconnect();
 		if ((millis()-this.count) > this.delay) {
-			if (random(100) < 2) {
+			if (random(100) < 1) {
 				this.oscDelay.process(this.osc, 0.9, 0.3, 3000);
 
 				/***** old *****/
