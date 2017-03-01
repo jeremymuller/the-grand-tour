@@ -147,7 +147,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 		if ((millis()-this.count) > this.delay) {
 			this.note.set({
 				"envelope" : {
-					"attack" : 0.2,
+					"attack" : 0.02,
 					"sustain" : 0.5,
 					"release" : 2
 				}
@@ -162,7 +162,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 				sus = "+3";
 				this.note.triggerAttackRelease(freq, Tone.now()+3, 0, 1);
 			} else
-				this.note.triggerAttackRelease(freq, Tone.now(), 0, random(0.1, 1));
+				this.note.triggerAttackRelease(freq, "+0.12", 0, random(0.1, 1));
 
 			this.delay = random(1000, 3000) + sus*1000;
 			this.count = millis();
