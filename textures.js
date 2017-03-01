@@ -147,7 +147,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 		if ((millis()-this.count) > this.delay) {
 			this.note.set({
 				"envelope" : {
-					"attack" : 0.1,
+					"attack" : 0.2,
 					"sustain" : 0.5,
 					"release" : 2
 				}
