@@ -38,7 +38,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 			"volume" : 6
 	    },
 	    "envelope" : {
-	        "attack" : 0.08,
+	        "attack" : 0.1,
 	        "decay" : 0.1,
 	        "sustain" : 0.1,
 	        "release" : 1,
@@ -52,7 +52,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 			"volume" : 12
 		},
 		"envelope" : {
-			"attack" : 0.05,
+			"attack" : 0.09,
 			"decay" : 0.1,
 			"sustain" : 0.1,
 			"release" : 1
@@ -147,7 +147,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 		if ((millis()-this.count) > this.delay) {
 			this.note.set({
 				"envelope" : {
-					"attack" : 0.05,
+					"attack" : 0.09,
 					"sustain" : 0.5,
 					"release" : 2
 				}
