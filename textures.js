@@ -10,6 +10,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 
 	/****************** sequence & timing ******************/
 	this.startC = random([0, 1]);
+	// this.startC = 1;
 	if (this.startC) this.delay = random(1000, 5000); // wait 1 to 5 seconds
 	else this.delay = random(25000, 30000); // wait 25 to 30 seconds
 	this.fadein = 1;
@@ -31,7 +32,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 
 	/****************** audio stuff ******************/
 
-	this.note = new Tone.Synth({
+	this.note = new Tone.PolySynth(4, Tone.Synth, {
 	    "oscillator" : {
 	        "type" : "square",
 			"volume" : 6
@@ -112,7 +113,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 				Tone.Master.volume.value = amp;
 				var pitch = 60;
 				this.note.triggerAttack((midiToFreq(pitch)+this.detune), 0, random(0.5, 1));
-				this.note.triggerRelease();
+				this.note.triggerRelease((midiToFreq(pitch)+this.detune));
 
 				this.fadein++;
 				this.delay = random(100, 300);
@@ -128,7 +129,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 				Tone.Master.volume.value = amp;
 				var pitch = 58;
 				this.note.triggerAttack((midiToFreq(pitch)+this.detune), 0, random(0.5, 1));
-				this.note.triggerRelease();
+				this.note.triggerRelease((midiToFreq(pitch)+this.detune));
 
 				this.fadein += 2;
 				this.delay = random(100, 300);
