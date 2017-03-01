@@ -46,22 +46,7 @@ function setup() {
 	texture4Duration = random(2.95, 3.05)*60000 + texture3Duration;
 	codaDuration = 1*60000 + texture4Duration;
 
-	/******* for testing *******/
-	// introDuration = 1*60000;
-	// texture1Duration = 1*60000 + introDuration;
-	// texture2Duration = 1*60000 + texture1Duration;
-	// texture3Duration = 1*60000 + texture2Duration;
-	// texture4Duration = 1*60000 + texture3Duration;
-	// codaDuration = 1*60000 + texture4Duration;
-
-	console.log("intro: " + introDuration);
-	console.log("1: " + texture1Duration);
-	console.log("2: " + texture2Duration);
-	console.log("3: " + texture3Duration);
-	console.log("4: " + texture4Duration);
-	console.log("coda: " + codaDuration);
-	var total = codaDuration/60000
-	console.log("Total length of this instance: " + total.toFixed(2) + "(seconds)");
+	StartAudioContext(Tone.context);
 }
 
 function draw() {
