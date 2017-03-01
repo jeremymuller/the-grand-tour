@@ -9,8 +9,8 @@ function Textures(jupiter, saturn, uranus, neptune) {
 	this.neptuneNotes = neptune;
 
 	/****************** sequence & timing ******************/
-	this.startC = random([0, 1]);
-	// this.startC = 1;
+	// this.startC = random([0, 1]);
+	this.startC = 1;
 	if (this.startC) this.delay = random(1000, 5000); // wait 1 to 5 seconds
 	else this.delay = random(25000, 30000); // wait 25 to 30 seconds
 	this.fadein = 1;
@@ -38,7 +38,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 			"volume" : 6
 	    },
 	    "envelope" : {
-	        "attack" : 0.1,
+	        "attack" : 0.2,
 	        "decay" : 0.1,
 	        "sustain" : 0.1,
 	        "release" : 1,
@@ -98,7 +98,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 	this.windNoise.chain(this.windFilter, this.windEnv, Tone.Master);
 	this.windEnv.connect(this.windReverb);
 
-	Tone.Master.volume.value = -40;
+	// Tone.Master.volume.value = -40;
 
 	/**********************************************/
 	/************** Textures Methods **************/
@@ -147,7 +147,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 		if ((millis()-this.count) > this.delay) {
 			this.note.set({
 				"envelope" : {
-					"attack" : 0.09,
+					"attack" : 0.1,
 					"sustain" : 0.5,
 					"release" : 2
 				}
