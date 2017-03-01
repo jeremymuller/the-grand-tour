@@ -30,6 +30,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 	Tone.Transport.start();
 
 	/****************** audio stuff ******************/
+
 	this.note = new Tone.Synth({
 	    "oscillator" : {
 	        "type" : "square",
@@ -39,7 +40,8 @@ function Textures(jupiter, saturn, uranus, neptune) {
 	        "attack" : 0.05,
 	        "decay" : 0.1,
 	        "sustain" : 0.1,
-	        "release" : 1
+	        "release" : 1,
+			"attackCurve" : "linear"
 	    }
 	}).toMaster();
 
@@ -225,7 +227,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 				"attack" : swellDuration/2.0,
 				"decay" : 0.0,
 				"sustain" : 1,
-				"release" : swellDuration/2.0		
+				"release" : swellDuration/2.0
 			});
 			this.windFilter.set("frequency", midiToFreq(pitch)*2);
 			this.windEnv.triggerAttackRelease(swellDuration/2.0);
