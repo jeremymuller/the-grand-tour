@@ -38,7 +38,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 			"volume" : 6
 	    },
 	    "envelope" : {
-	        "attack" : 0.2,
+	        "attack" : 0.05,
 	        "decay" : 0.1,
 	        "sustain" : 0.1,
 	        "release" : 1,
@@ -112,8 +112,10 @@ function Textures(jupiter, saturn, uranus, neptune) {
 				if (amp > 0) amp = 0;
 				Tone.Master.volume.value = amp;
 				var pitch = 60;
-				this.note.triggerAttack((midiToFreq(pitch)+this.detune), 0, random(0.5, 1));
-				this.note.triggerRelease();
+				this.note.triggerAttackRelease((midiToFreq(pitch)+this.detune), 0.05, "+0", random(0.5, 1));
+
+				// this.note.triggerAttack((midiToFreq(pitch)+this.detune), 0, random(0.5, 1));
+				// this.note.triggerRelease();
 
 				this.fadein++;
 				this.delay = random(100, 300);
@@ -128,8 +130,10 @@ function Textures(jupiter, saturn, uranus, neptune) {
 				if (amp > 0) amp = 0;
 				Tone.Master.volume.value = amp;
 				var pitch = 58;
-				this.note.triggerAttack((midiToFreq(pitch)+this.detune), 0, random(0.5, 1));
-				this.note.triggerRelease();
+				this.note.triggerAttackRelease((midiToFreq(pitch)+this.detune), 0.05, "+0", random(0.5, 1));
+
+				// this.note.triggerAttack((midiToFreq(pitch)+this.detune), 0, random(0.5, 1));
+				// this.note.triggerRelease();
 
 				this.fadein += 2;
 				this.delay = random(100, 300);
@@ -160,9 +164,9 @@ function Textures(jupiter, saturn, uranus, neptune) {
 				pitch = 60;
 				freq = midiToFreq(pitch) + this.detune;
 				sus = "+3";
-				this.note.triggerAttackRelease(freq, Tone.now()+3, 0, 1);
+				this.note.triggerAttackRelease(freq, 3, "+0", 1);
 			} else
-				this.note.triggerAttackRelease(freq, "+0.12", 0, random(0.1, 1));
+				this.note.triggerAttackRelease(freq, 0.02, "+0", random(0.1, 1));
 
 			this.delay = random(1000, 3000) + sus*1000;
 			this.count = millis();
