@@ -9,8 +9,8 @@ function Textures(jupiter, saturn, uranus, neptune) {
 	this.neptuneNotes = neptune;
 
 	/****************** sequence & timing ******************/
-	this.startC = random([0, 1]);
-	// this.startC = 1;
+	// this.startC = random([0, 1]);
+	this.startC = 1;
 	if (this.startC) this.delay = random(1000, 5000); // wait 1 to 5 seconds
 	else this.delay = random(25000, 30000); // wait 25 to 30 seconds
 	this.fadein = 1;
@@ -35,14 +35,15 @@ function Textures(jupiter, saturn, uranus, neptune) {
 	this.note = new Tone.Synth({
 	    "oscillator" : {
 	        "type" : "square",
-			"volume" : 6
+			"volume" : 0
 	    },
 	    "envelope" : {
-	        "attack" : 0.05,
+	        "attack" : 0.08, // 0.05
 	        "decay" : 0.1,
 	        "sustain" : 0.1,
 	        "release" : 1,
-			"attackCurve" : "linear"
+			"attackCurve" : "linear",
+			"releaseCurve" : "exponential"
 	    }
 	}).toMaster();
 
@@ -112,13 +113,14 @@ function Textures(jupiter, saturn, uranus, neptune) {
 				if (amp > 0) amp = 0;
 				Tone.Master.volume.value = amp;
 				var pitch = 60;
-				this.note.triggerAttackRelease((midiToFreq(pitch)+this.detune), 0.05, "+0", random(0.5, 1));
+				this.note.triggerAttackRelease((midiToFreq(pitch)+this.detune), 0.08, "+0", random(0.1, 1));
 
 				// this.note.triggerAttack((midiToFreq(pitch)+this.detune), 0, random(0.5, 1));
 				// this.note.triggerRelease();
 
 				this.fadein++;
 				this.delay = random(100, 300);
+				// this.delay = 1000;
 				this.count = millis();
 
 				// this is only for displaying what's going on, instead of having to use the console
@@ -130,7 +132,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 				if (amp > 0) amp = 0;
 				Tone.Master.volume.value = amp;
 				var pitch = 58;
-				this.note.triggerAttackRelease((midiToFreq(pitch)+this.detune), 0.05, "+0", random(0.5, 1));
+				this.note.triggerAttackRelease((midiToFreq(pitch)+this.detune), 0.05, "+0", random(0.1, 1));
 
 				// this.note.triggerAttack((midiToFreq(pitch)+this.detune), 0, random(0.5, 1));
 				// this.note.triggerRelease();
@@ -151,7 +153,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 		if ((millis()-this.count) > this.delay) {
 			this.note.set({
 				"envelope" : {
-					"attack" : 0.02,
+					"attack" : 0.08,
 					"sustain" : 0.5,
 					"release" : 2
 				}
@@ -166,7 +168,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 				sus = "+3";
 				this.note.triggerAttackRelease(freq, 3, "+0", 1);
 			} else
-				this.note.triggerAttackRelease(freq, 0.02, "+0", random(0.1, 1));
+				this.note.triggerAttackRelease(freq, 0.08, "+0", random(0.5, 1));
 
 			this.delay = random(1000, 3000) + sus*1000;
 			this.count = millis();
