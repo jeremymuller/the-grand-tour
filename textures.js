@@ -98,7 +98,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 	this.windNoise.chain(this.windFilter, this.windEnv, Tone.Master);
 	this.windEnv.connect(this.windReverb);
 
-	// Tone.Master.volume.value = -40;
+	Tone.Master.volume.value = -40;
 
 	/**********************************************/
 	/************** Textures Methods **************/
