@@ -32,13 +32,13 @@ function Textures(jupiter, saturn, uranus, neptune) {
 
 	/****************** audio stuff ******************/
 
-	this.note = new Tone.PolySynth(4, Tone.Synth, {
+	this.note = new Tone.Synth({
 	    "oscillator" : {
 	        "type" : "square",
 			"volume" : 0
 	    },
 	    "envelope" : {
-	        "attack" : 0.08, // 0.05
+	        "attack" : 0.1, // 0.05
 	        "decay" : 0.1,
 	        "sustain" : 0.1,
 	        "release" : 1,
@@ -53,7 +53,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 			"volume" : 12
 		},
 		"envelope" : {
-			"attack" : 0.05,
+			"attack" : 0.1,
 			"decay" : 0.1,
 			"sustain" : 0.1,
 			"release" : 1
@@ -113,7 +113,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 				if (amp > 0) amp = 0;
 				Tone.Master.volume.value = amp;
 				var pitch = 60;
-				this.note.triggerAttackRelease((midiToFreq(pitch)+this.detune), 0.08, "+0", random(0.1, 1));
+				this.note.triggerAttackRelease((midiToFreq(pitch)+this.detune), 0.1, "+0", random(0.1, 1));
 
 				// this.note.triggerAttack((midiToFreq(pitch)+this.detune), 0, random(0.5, 1));
 				// this.note.triggerRelease();
@@ -132,7 +132,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 				if (amp > 0) amp = 0;
 				Tone.Master.volume.value = amp;
 				var pitch = 58;
-				this.note.triggerAttackRelease((midiToFreq(pitch)+this.detune), 0.05, "+0", random(0.1, 1));
+				this.note.triggerAttackRelease((midiToFreq(pitch)+this.detune), 0.1, "+0", random(0.1, 1));
 
 				// this.note.triggerAttack((midiToFreq(pitch)+this.detune), 0, random(0.5, 1));
 				// this.note.triggerRelease();
@@ -153,7 +153,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 		if ((millis()-this.count) > this.delay) {
 			this.note.set({
 				"envelope" : {
-					"attack" : 0.08,
+					"attack" : 0.1,
 					"sustain" : 0.5,
 					"release" : 2
 				}
