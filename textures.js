@@ -32,7 +32,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 
 	/****************** audio stuff ******************/
 
-	this.note = new Tone.Synth({
+	this.note = new Tone.PolySynth(4, Tone.Synth, {
 	    "oscillator" : {
 	        "type" : "square",
 			"volume" : 0
