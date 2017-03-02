@@ -172,7 +172,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 			this.count = millis();
 
 			// this is only for displaying what's going on, instead of having to use the console
-			// document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + 0.2 + "\"";
+			document.getElementsByTagName("p")[0].innerHTML = "pitch: " + pitch + "</br>sustain: " + 0.2 + "\"";
 		}
 	}
 
