@@ -13,6 +13,9 @@ var startButton, text, wrapper, startDelay, startC, startNote;
 var backgroundHue = Math.random() * 360;
 // consistent with the ratios happening in piano part
 var ratios = [2/9.0, 0.25, 0.4, 2/6.0, 0.125, 0.5, 2/15.0, 2/3.0, 2];
+var detune = random([0, 1]);
+
+var jupiter = [60, 62, 64, 65, 67, 69, 71, 72];
 
 function setup() {
     StartAudioContext(Tone.context);
@@ -34,11 +37,11 @@ function setup() {
 
 	// set variables
     introDuration = random(1, 1.5) * 60;
-    texture1Duration = random(2.5, 3) * 60;
-    texture2Duration = random(2.45, 2.55) * 60;
-    texture3Duration = random(1.95, 2.05) * 60;
-    texture4Duration = random(2.95, 3.05) * 60;
-    codaDuration = 60;
+    texture1Duration = random(2.5, 3) * 60 + introDuration;
+    texture2Duration = random(2.45, 2.55) * 60 + texture1Duration;
+    texture3Duration = random(1.95, 2.05) * 60 + texture2Duration;
+    texture4Duration = random(2.95, 3.05) * 60 + texture3Duration;
+    codaDuration = 60 + texture4Duration;
 	startC = random([0, 1]);
 	// startC = 1;
 	if (startC) {startDelay = random(1, 5); startNote = 60;}
@@ -72,6 +75,9 @@ var squareSynth = new Tone.Synth({
 var intro = new Tone.Loop(playIntro, 0.2);
 intro.humanize = 0.1;
 
+var t1 = new Tone.Loop(playTexture1, random(1, 3));
+
+
 /*****************************/
 /********* functions *********/
 /*****************************/
@@ -81,8 +87,12 @@ function buttonAction() {
 	console.log("STARTED");
 	wrapper.remove();
 	Tone.Transport.start("+0.1");
-	intro.start(Tone.now()+startDelay).stop(introDuration);
-	Tone.Master.volume.linearRampToValue(0, 45, Tone.now()+startDelay);
+	// intro.start(Tone.now()+startDelay).stop(introDuration);
+	// Tone.Master.volume.linearRampToValue(0, 45, Tone.now()+startDelay);
+	// t1.start(Tone.now()+introDuration).stop(texture1Duration);
+
+	Tone.Master.volume.rampTo(0, 10);
+	t1.start(Tone.now()+startDelay).stop(60);
 
 	play = true;
 	draw();
@@ -100,7 +110,20 @@ function midiToFreq(note) {
 }
 
 function playIntro(time) {
-    squareSynth.triggerAttackRelease(midiToFreq(startNote), 0.1, time, random(0.1, 1));
+    squareSynth.triggerAttackRelease(midiToFreq(startNote)+detune, 0.1, time, random(0.1, 1));
+}
+
+function playTexture1(time) {
+	t1.interval = random(1, 3);
+	squareSynth.set({
+		"envelope" : {
+			"attack" : 0.02,
+			"release" : 2
+		}
+	});
+	var note = random(jupiter);
+	console.log("played note: " + note);
+	squareSynth.triggerAttackRelease(midiToFreq(note)*2, 0.1, time, random(0.5, 1));
 }
 
 function random(min, max) {
