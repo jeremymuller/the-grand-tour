@@ -42,8 +42,6 @@ function Textures(jupiter, saturn, uranus, neptune) {
 	        "decay" : 0.1,
 	        "sustain" : 0.1,
 	        "release" : 1,
-			"attackCurve" : "linear",
-			"releaseCurve" : "exponential"
 	    }
 	}).toMaster();
 
@@ -113,7 +111,7 @@ function Textures(jupiter, saturn, uranus, neptune) {
 				if (amp > 0) amp = 0;
 				Tone.Master.volume.value = amp;
 				var pitch = 60;
-				this.note.triggerAttackRelease((midiToFreq(pitch)+this.detune), undefined, "+0", random(0.1, 1));
+				this.note.triggerAttackRelease((midiToFreq(pitch)+this.detune), 0.1, "+0", random(0.1, 1));
 
 				// this.note.triggerAttack((midiToFreq(pitch)+this.detune), 0, random(0.5, 1));
 				// this.note.triggerRelease();
