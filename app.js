@@ -5,21 +5,283 @@
 //
 
 /************* variables *************/
-var introDuration, texture1Duration, texture2Duration,
-	texture3Duration, texture4Duration, codaDuration;
+var introStart, t1Start, t2Start, t3Start,
+	t4Start, codaStart;
+var introEnd, t1End, t2End,
+	t3End, t4End, codaEnd;
 var play = false;
 var startButton, text, wrapper, startDelay, startC, startNote;
 
 var backgroundHue = Math.random() * 360;
-// consistent with the ratios happening in piano part
-var ratios = [2/9.0, 0.25, 0.4, 2/6.0, 0.125, 0.5, 2/15.0, 2/3.0, 2];
+
+var ratios = [2/9.0, 0.25, 0.4, 2/6.0, 0.125, 0.5, 2/15.0, 2/3.0, 2]; // consistent with the ratios happening in piano part
 var detune = random([0, 1]);
+var loopT1 = false;
+var loopT3 = false;
+var loopT4 = false;
 
-var jupiter = [60, 62, 64, 65, 67, 69, 71, 72];
+var jupiter = [];
+var saturn = [];
+var uranus = [];
+var neptune = [];
 
-function setup() {
+// TODO: probably gonna make texture 1 similar to
+// 		intro by repetitions on the same note,
+//		however, it will ocassionally change notes
+//		to play ones from jupiter array
+var intro = new Tone.Loop(playIntro, 0.2);
+intro.humanize = 0.1;
+
+var texture2 = new Tone.Loop(playTexture2, 10);
+// texture2.humanize = 1;
+
+var texture3 = new Tone.Loop(playTexture3, 0.2);
+texture3.humanize = 0.1;
+var sequence = new Tone.Sequence(playMotive, [60, 62, 65, 71], 0.166666);
+sequence.loop = 1;
+
+/************** synths **************/
+var squareSynth = new Tone.Synth({
+    "oscillator" : {
+        "type" : "square",
+        "volume" : 6
+    },
+    "envelope" : {
+        "attack" : 0.05, // 0.05
+        "decay" : 0.1,
+        "sustain" : 0.1,
+        "release" : 1
+    }
+}).toMaster();
+
+var squareDelaySynth = new Tone.Synth({
+	"oscillator" : {
+		"type" : "square",
+		"volume" : 6
+	},
+	"envelope" : {
+		"attack" : 0.02,
+		"decay" : 0.1,
+		"sustain" : 0.1,
+		"release" : 1
+	}
+}).toMaster();
+var delayFilter = new Tone.Filter(1000);
+var fbDelay = new Tone.FeedbackDelay(1, 0.6);
+squareDelaySynth.chain(delayFilter, fbDelay, Tone.Master);
+
+var noise = new Tone.Noise().start();
+var filter = new Tone.Filter({
+	"type" : "bandpass",
+	"frequency" : 880,
+	"Q" : 1,
+	"gain" : 24
+});
+var noiseEnv = new Tone.AmplitudeEnvelope({
+	"attack" : 0.001,
+	"decay" : 0.03,
+	"sustain" : 0.2,
+	"release" : 0.1,
+	"attackCurve" : "linear",
+	"releaseCurve" : "exponential"
+});
+var bump = new Tone.Multiply(20);
+noise.chain(filter, noiseEnv, bump, Tone.Master);
+
+var windNoise = new Tone.Noise().start();
+var windFilter = new Tone.Filter({
+		"type" : "bandpass",
+		"frequency" : 880,
+		"Q" : 50,
+		"gain" : 24
+});
+var windEnv = new Tone.AmplitudeEnvelope({
+		"attackCurve" : "linear",
+		"releaseCurve" : "linear"
+});
+var windReverb = new Tone.Freeverb(0.9, 4000).toMaster();
+windNoise.chain(windFilter, windEnv, Tone.Master);
+windEnv.connect(windReverb);
+
+/*****************************/
+/********* functions *********/
+/*****************************/
+
+function buttonAction() {
+	// everything that needs to happen when you press start
+	console.log("STARTED");
+	wrapper.remove();
+
+	Tone.Master.volume.linearRampToValue(0, 45, Tone.now()+startDelay);
+
+	intro.start(Tone.now()+introStart).stop(Tone.now()+introEnd);
+
+	// TODO: gonna change texture1 to be similar to intro
+	setTimeout(startTexture1, t1Start*1000);
+
+	// texture2.start(Tone.now()+startDelay).stop(60);
+
+
+	// the problem is where it stops!!!
+	// texture3.start(Tone.now()+startDelay).stop(Tone.now() + 60);
+
+	// startTexture4();
+
+	// playCoda();
+
+	play = true;
+	draw();
+}
+
+/************** intro **************/
+
+function playIntro(time) {
+    squareSynth.triggerAttackRelease(midiToFreq(startNote)+detune, 0.1, time, random(0.1, 1));
+}
+
+/************** texture 1 **************/
+
+function texture1(time) {
+	if (loopT1) {
+		var dur = 0.1;
+		var note = random(jupiter) + 12;
+		if (random(100) < 5) {
+			dur = 3;
+			note = 60;
+		}
+		playTexture1(note, dur, time);
+		Tone.Transport.schedule(texture1, Tone.now()+random(1, 3)+dur);
+	}
+}
+
+function playTexture1(note, dur, time) {
+	squareSynth.set({
+		"envelope" : {
+			"attack" : 0.02,
+			"sustain" : 0.5,
+			"release" : 2
+		}
+	});
+	console.log("played note: " + note);
+	squareSynth.triggerAttackRelease(midiToFreq(note), dur, time, random(0.5, 1));
+}
+
+function startTexture1() {
+	loopT1 = true;
+	texture1(Tone.now());
+	setTimeout(stopLoopT1, (t1End-t1Start)*1000);
+}
+
+function stopLoopT1() {
+	console.log("texture 1 stopped");
+	loopT1 = false;
+}
+
+/************** texture 2 **************/
+
+function playTexture2(time) {
+	fbDelay.delayTime.setValueAtTime(random(ratios), time);
+	var pitch = random(saturn);
+	console.log("pitch: " + pitch);
+	squareDelaySynth.triggerAttackRelease(midiToFreq(pitch)*2, 0.1, time, random(0.5, 1));
+}
+
+/************** texture 3 **************/
+
+// TODO: finish sequence
+function playTexture3(time) {
+	if (random(100) < 3) { // 1%
+		console.log("SEQUENCE");
+		sequence.start(time);
+		sequence.stop("+2");
+	} else {
+		console.log("NOISE");
+		var pitch = random(uranus);
+		filter.frequency.setValueAtTime(midiToFreq(pitch)*2, time);
+		noiseEnv.triggerAttackRelease(0.01, time);
+	}
+}
+
+function playMotive(time, pitch) {
+	fbDelay.feedback.setValueAtTime(0.3, time);
+	squareDelaySynth.set("envelope.release", 2);
+	var freq = midiToFreq(pitch) * 2;
+	squareDelaySynth.triggerAttackRelease(freq, 0.1, time, 1);
+}
+
+/************** texture 4 **************/
+
+function playTexture4(time, swellDuration, restDuration) {
+	console.log("swellDuration: " + swellDuration);
+	var pitch = random(neptune);
+
+	windEnv.set({
+		"attack" : swellDuration/2.0,
+		"decay" : 0.0,
+		"sustain" : 1,
+		"release" : swellDuration/2.0
+	});
+	// windFilter.set("frequency", midiToFreq(pitch)*2);
+	windFilter.frequency.setValueAtTime(midiToFreq(pitch)*2, time);
+	windEnv.triggerAttackRelease(swellDuration/2.0);
+
+}
+
+function startTexture4() {
+	loopT4 = true;
+	texture4(Tone.now());
+	setTimeout(stopLoopT4, 30000);
+}
+
+function stopLoopT4() {
+	console.log("texture 4 stopped");
+	loopT4 = false;
+}
+
+function texture4(time) {
+	if (loopT4) {
+		var swellDuration = random(5, 20);
+		var restDuration = random(3, 5);
+		playTexture4(time, swellDuration, restDuration);
+		Tone.Transport.schedule(texture4, Tone.now()+swellDuration+restDuration);
+	}
+}
+
+/************** coda **************/
+
+function playCoda() {
+	console.log("CODA!");
+	var swellDuration = 60;
+
+	windNoise.set("gain", 12);
+	windFilter.set({
+		"frequency" : midiToFreq(60),
+		"gain" : 48
+	});
+	windEnv.set({
+		"attack" : swellDuration/2.0,
+		"decay" : 0.0,
+		"sustain" : 1,
+		"release" : swellDuration/2.0
+	});
+	windEnv.triggerAttackRelease(swellDuration/2.0);
+}
+
+/************** helpers **************/
+
+function draw() {
+	// this slowly animates background hue
+	requestAnimationFrame(draw);
+	document.body.style.backgroundColor = "hsl(" + backgroundHue + ", 100%, 50%)";
+	if (play) backgroundHue += 0.1;
+
+	document.getElementsByTagName("p")[0].innerHTML = "audio context: " + Tone.now().toFixed(2);
+}
+
+function init() {
     StartAudioContext(Tone.context);
 	Tone.Master.volume.value = -500;
+	Tone.Transport.start("+0.1");
 
 	document.body.style.backgroundColor = "hsl(" + backgroundHue + ", 100%, 50%)";
 
@@ -35,103 +297,33 @@ function setup() {
     wrapper.appendChild(startButton);
     document.body.appendChild(wrapper);
 
+	// load data
+	loadJSON(function(response) {
+        satellites = JSON.parse(response);
+		jupiter = satellites["Jupiter pitch"];
+		saturn = satellites["Saturn pitch"];
+		uranus = satellites["Uranus pitch"];
+		neptune = satellites["Neptune pitch"];
+    });
+
 	// set variables
-    introDuration = random(1, 1.5) * 60;
-    texture1Duration = random(2.5, 3) * 60 + introDuration;
-    texture2Duration = random(2.45, 2.55) * 60 + texture1Duration;
-    texture3Duration = random(1.95, 2.05) * 60 + texture2Duration;
-    texture4Duration = random(2.95, 3.05) * 60 + texture3Duration;
-    codaDuration = 60 + texture4Duration;
-	startC = random([0, 1]);
 	// startC = 1;
+	startC = random([0, 1]);
 	if (startC) {startDelay = random(1, 5); startNote = 60;}
 	else {startDelay = random(25, 30); startNote = 58;}
-
-	console.log("intro: " + introDuration);
-	console.log("t1: " + texture1Duration);
-	console.log("t2: " + texture2Duration);
-	console.log("t3: " + texture3Duration);
-	console.log("t4: " + texture4Duration);
-	console.log("coda duration: " + codaDuration);
+	introStart = startDelay;
+	introEnd = random(1, 1.5) * 60;
+	t1Start = introEnd + 0.1; // add little buffer between mvmts
+	t1End = random(2.5, 3) * 60 + t1Start;
+	t2Start = t1End;
+	t2End = random(2.45, 2.55) * 60 + t2Start;
+	t3Start = t2End;
+	t3End = random(1.95, 2.05) * 60 + t3Start;
+	t4Start = t3End
+	t4End = random(2.95, 3.05) * 60 + t4Start;
+	codaStart = t4End;
+	codaEnd = 60 + codaStart;
 
 	console.log("startDelay: " + startDelay);
-	console.log("startC: " + startC);
 	console.log("startNote: " + startNote);
-}
-
-var squareSynth = new Tone.Synth({
-    "oscillator" : {
-        "type" : "square",
-        "volume" : 6
-    },
-    "envelope" : {
-        "attack" : 0.05, // 0.05
-        "decay" : 0.1,
-        "sustain" : 0.1,
-        "release" : 1
-    }
-}).toMaster();
-
-var intro = new Tone.Loop(playIntro, 0.2);
-intro.humanize = 0.1;
-
-var t1 = new Tone.Loop(playTexture1, random(1, 3));
-
-
-/*****************************/
-/********* functions *********/
-/*****************************/
-
-function buttonAction() {
-	// everything that needs to happen when you press start
-	console.log("STARTED");
-	wrapper.remove();
-	Tone.Transport.start("+0.1");
-	// intro.start(Tone.now()+startDelay).stop(introDuration);
-	// Tone.Master.volume.linearRampToValue(0, 45, Tone.now()+startDelay);
-	// t1.start(Tone.now()+introDuration).stop(texture1Duration);
-
-	Tone.Master.volume.rampTo(0, 10);
-	t1.start(Tone.now()+startDelay).stop(60);
-
-	play = true;
-	draw();
-}
-
-function draw() {
-	// this slowly animates background hue
-	requestAnimationFrame(draw);
-	document.body.style.backgroundColor = "hsl(" + backgroundHue + ", 100%, 50%)";
-	if (play) backgroundHue += 0.1;
-}
-
-function midiToFreq(note) {
-	return 440 * Math.pow(2, ((note-69)/12.0));
-}
-
-function playIntro(time) {
-    squareSynth.triggerAttackRelease(midiToFreq(startNote)+detune, 0.1, time, random(0.1, 1));
-}
-
-function playTexture1(time) {
-	t1.interval = random(1, 3);
-	squareSynth.set({
-		"envelope" : {
-			"attack" : 0.02,
-			"release" : 2
-		}
-	});
-	var note = random(jupiter);
-	console.log("played note: " + note);
-	squareSynth.triggerAttackRelease(midiToFreq(note)*2, 0.1, time, random(0.5, 1));
-}
-
-function random(min, max) {
-	if (typeof min === "object") {
-		// this should be an array
-		return min[Math.floor(Math.random()*min.length)];
-	} else {
-	    var diff = max - min;
-	    return ((Math.random() * diff) + min);
-	}
 }
