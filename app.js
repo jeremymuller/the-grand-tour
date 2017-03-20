@@ -275,7 +275,7 @@ function draw() {
 	document.body.style.backgroundColor = "hsl(" + backgroundHue + ", 100%, 50%)";
 	if (play) backgroundHue += 0.1;
 
-	document.getElementsByTagName("p")[0].innerHTML = "audio context: " + Tone.now().toFixed(2);
+	// document.getElementsByTagName("p")[0].innerHTML = "audio context: " + Tone.now().toFixed(2);
 }
 
 function init() {
