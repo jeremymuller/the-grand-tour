@@ -36,3 +36,17 @@ function random(min, max) {
 	    return ((Math.random() * diff) + min);
 	}
 }
+
+function theEnd() {
+    // display ending text
+    var finale = document.createElement("div");
+    text = document.createTextNode("The End");
+    finale.appendChild(text);
+    finale.className = "splash";
+	wrapper = document.createElement("div");
+	wrapper.className = "wrapper";
+	wrapper.id = "container";
+    wrapper.appendChild(finale);
+    document.body.appendChild(wrapper);
+	console.log("the end");
+}

@@ -119,15 +119,12 @@ function buttonAction() {
 	// TODO: gonna change texture1 to be similar to intro
 	setTimeout(startTexture1, t1Start*1000);
 
-	// texture2.start(Tone.now()+startDelay).stop(60);
+	texture2.start(Tone.now()+t2Start).stop(Tone.now()+t2End);
+	texture3.start(Tone.now()+t3Start).stop(Tone.now()+t3End);
 
-
-	// the problem is where it stops!!!
-	// texture3.start(Tone.now()+startDelay).stop(Tone.now() + 60);
-
-	// startTexture4();
-
-	// playCoda();
+	setTimeout(startTexture4, t4Start*1000);
+	setTimeout(playCoda, codaStart*1000);
+	setTimeout(theEnd, codaEnd*1000);
 
 	play = true;
 	draw();
@@ -167,6 +164,7 @@ function playTexture1(note, dur, time) {
 }
 
 function startTexture1() {
+	console.log("texture 1 started");
 	loopT1 = true;
 	texture1(Tone.now());
 	setTimeout(stopLoopT1, (t1End-t1Start)*1000);
@@ -188,10 +186,10 @@ function playTexture2(time) {
 
 /************** texture 3 **************/
 
-// TODO: finish sequence
 function playTexture3(time) {
-	if (random(100) < 3) { // 1%
+	if (random(100) < 1) { // 1%
 		console.log("SEQUENCE");
+		fbDelay.delayTime.setValueAtTime(1, time);
 		sequence.start(time);
 		sequence.stop("+2");
 	} else {
@@ -228,9 +226,10 @@ function playTexture4(time, swellDuration, restDuration) {
 }
 
 function startTexture4() {
+	console.log("texture 4 started");
 	loopT4 = true;
 	texture4(Tone.now());
-	setTimeout(stopLoopT4, 30000);
+	setTimeout(stopLoopT4, (t4End-t4Start)*1000);
 }
 
 function stopLoopT4() {
