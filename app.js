@@ -115,19 +115,17 @@ function buttonAction() {
 
 	Tone.Master.volume.linearRampToValue(0, 45, Tone.now()+startDelay);
 
-	// intro.start(Tone.now()+introStart).stop(Tone.now()+introEnd);
+	intro.start(Tone.now()+introStart).stop(Tone.now()+introEnd);
 
 	// TODO: gonna change texture1 to be similar to intro
-	// setTimeout(startTexture1, t1Start*1000);
-	//
-	// texture2.start(Tone.now()+t2Start).stop(Tone.now()+t2End);
-	// texture3.start(Tone.now()+t3Start).stop(Tone.now()+t3End);
-	//
-	// setTimeout(startTexture4, t4Start*1000);
-	// setTimeout(playCoda, codaStart*1000);
-	// setTimeout(theEnd, codaEnd*1000);
+	setTimeout(startTexture1, t1Start*1000);
 
-	setTimeout(startTexture4, startDelay*1000);
+	texture2.start(Tone.now()+t2Start).stop(Tone.now()+t2End);
+	texture3.start(Tone.now()+t3Start).stop(Tone.now()+t3End);
+
+	setTimeout(startTexture4, t4Start*1000);
+	setTimeout(playCoda, codaStart*1000);
+	setTimeout(theEnd, codaEnd*1000);
 
 	draw();
 }
