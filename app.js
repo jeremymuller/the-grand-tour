@@ -9,9 +9,9 @@ var introStart, t1Start, t2Start, t3Start,
 	t4Start, codaStart;
 var introEnd, t1End, t2End,
 	t3End, t4End, codaEnd;
-var play = false;
 var startButton, text, wrapper, startDelay, startC, startNote;
 
+var play = false;
 var backgroundHue = Math.random() * 360;
 
 var ratios = [2/9.0, 0.25, 0.4, 2/6.0, 0.125, 0.5, 2/15.0, 2/3.0, 2]; // consistent with the ratios happening in piano part
@@ -111,22 +111,24 @@ function buttonAction() {
 	// everything that needs to happen when you press start
 	console.log("STARTED");
 	wrapper.remove();
+	play = true;
 
 	Tone.Master.volume.linearRampToValue(0, 45, Tone.now()+startDelay);
 
-	intro.start(Tone.now()+introStart).stop(Tone.now()+introEnd);
+	// intro.start(Tone.now()+introStart).stop(Tone.now()+introEnd);
 
 	// TODO: gonna change texture1 to be similar to intro
-	setTimeout(startTexture1, t1Start*1000);
+	// setTimeout(startTexture1, t1Start*1000);
+	//
+	// texture2.start(Tone.now()+t2Start).stop(Tone.now()+t2End);
+	// texture3.start(Tone.now()+t3Start).stop(Tone.now()+t3End);
+	//
+	// setTimeout(startTexture4, t4Start*1000);
+	// setTimeout(playCoda, codaStart*1000);
+	// setTimeout(theEnd, codaEnd*1000);
 
-	texture2.start(Tone.now()+t2Start).stop(Tone.now()+t2End);
-	texture3.start(Tone.now()+t3Start).stop(Tone.now()+t3End);
+	setTimeout(startTexture4, startDelay*1000);
 
-	setTimeout(startTexture4, t4Start*1000);
-	setTimeout(playCoda, codaStart*1000);
-	setTimeout(theEnd, codaEnd*1000);
-
-	play = true;
 	draw();
 }
 
@@ -229,12 +231,10 @@ function startTexture4() {
 	console.log("texture 4 started");
 	loopT4 = true;
 	texture4(Tone.now());
-	setTimeout(stopLoopT4, (t4End-t4Start)*1000);
-}
-
-function stopLoopT4() {
-	console.log("texture 4 stopped");
-	loopT4 = false;
+	setTimeout(function() {
+		console.log("texture 4 stopped");
+		loopT4 = false;
+	}, (t4End-t4Start)*1000);
 }
 
 function texture4(time) {
@@ -243,6 +243,10 @@ function texture4(time) {
 		var restDuration = random(3, 5);
 		playTexture4(time, swellDuration, restDuration);
 		Tone.Transport.schedule(texture4, Tone.now()+swellDuration+restDuration);
+	} else {
+		// when texture4 is done, it triggers coda
+		playCoda();
+		setTimeout(theEnd, 60000);
 	}
 }
 

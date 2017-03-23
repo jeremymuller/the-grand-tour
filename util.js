@@ -38,6 +38,8 @@ function random(min, max) {
 }
 
 function theEnd() {
+    play = false;
+
     // display ending text
     var finale = document.createElement("div");
     text = document.createTextNode("The End");
