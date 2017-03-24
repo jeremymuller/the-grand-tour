@@ -32,6 +32,9 @@ var neptune = [];
 var intro = new Tone.Loop(playIntro, 0.2);
 intro.humanize = 0.1;
 
+var texture1 = new Tone.Loop(playTexture1, 0.2);
+texture1.humanize = 0.1;
+
 var texture2 = new Tone.Loop(playTexture2, 10);
 // texture2.humanize = 1;
 
@@ -53,6 +56,14 @@ var squareSynth = new Tone.Synth({
         "release" : 1
     }
 }).toMaster();
+
+var oscEnv = new Tone.AmplitudeEnvelope({
+	"attack" : 0.02,
+	"decay" : 0.1,
+	"sustain" : 0.5,
+	"release" : 2
+}).toMaster();
+var osc = new Tone.Oscillator(440, "square").connect(oscEnv).start();
 
 var squareDelaySynth = new Tone.Synth({
 	"oscillator" : {
@@ -118,6 +129,7 @@ function buttonAction() {
 	intro.start(Tone.now()+introStart).stop(Tone.now()+introEnd);
 
 	// TODO: gonna change texture1 to be similar to intro
+	texture1.start(Tone.now()+t1Start).stop(Tone.now()+t1End);
 	setTimeout(startTexture1, t1Start*1000);
 
 	texture2.start(Tone.now()+t2Start).stop(Tone.now()+t2End);
@@ -138,7 +150,7 @@ function playIntro(time) {
 
 /************** texture 1 **************/
 
-function texture1(time) {
+function changeNote(time) {
 	if (loopT1) {
 		var dur = 0.1;
 		var note = random(jupiter) + 12;
@@ -146,33 +158,25 @@ function texture1(time) {
 			dur = 3;
 			note = 60;
 		}
-		playTexture1(note, dur, time);
-		Tone.Transport.schedule(texture1, Tone.now()+random(1, 3)+dur);
+		// playTexture1(note, dur, time);
+		console.log("changed note: " + note);
+		osc.frequency.setValueAtTime(midiToFreq(note), time);
+		Tone.Transport.schedule(changeNote, Tone.now()+random(5, 10));
 	}
 }
 
-function playTexture1(note, dur, time) {
-	squareSynth.set({
-		"envelope" : {
-			"attack" : 0.02,
-			"sustain" : 0.5,
-			"release" : 2
-		}
-	});
-	console.log("played note: " + note);
-	squareSynth.triggerAttackRelease(midiToFreq(note), dur, time, random(0.5, 1));
+function playTexture1(time) {
+	oscEnv.triggerAttackRelease(0.1, time, random(0.1, 1));
 }
 
 function startTexture1() {
 	console.log("texture 1 started");
 	loopT1 = true;
-	texture1(Tone.now());
-	setTimeout(stopLoopT1, (t1End-t1Start)*1000);
-}
-
-function stopLoopT1() {
-	console.log("texture 1 stopped");
-	loopT1 = false;
+	changeNote(Tone.now());
+	setTimeout(function(){
+		console.log("texture 1 stopped");
+		loopT1 = false;
+	}, (t1End-t1Start)*1000);
 }
 
 /************** texture 2 **************/
