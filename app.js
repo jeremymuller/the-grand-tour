@@ -25,10 +25,6 @@ var saturn = [];
 var uranus = [];
 var neptune = [];
 
-// TODO: probably gonna make texture 1 similar to
-// 		intro by repetitions on the same note,
-//		however, it will ocassionally change notes
-//		to play ones from jupiter array
 var intro = new Tone.Loop(playIntro, 0.2);
 intro.humanize = 0.1;
 
